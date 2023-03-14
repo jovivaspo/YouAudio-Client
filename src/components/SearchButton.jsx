@@ -1,6 +1,6 @@
 import React from "react";
 import SearchIcon from "./icons/SearchIcon";
-import api from "../api/api";
+
 
 const SearchButton = ({ size, setActive, handlerSearch }) => {
   return (
