@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { categories } from "../helpers/categories";
 import api from "../api/api";
-import Aside from "../components/Aside";
+import { Globalcontext } from "../contexts/GlobalContext";
 
 const Home = () => {
-  const [selected, setSelected] = useState(Object.keys(categories)[0]);
-  const [videos, setVideos] = useState([]);
+  const { videos, setVideos, selected } = useContext(Globalcontext);
 
-  console.log(selected);
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -22,29 +20,23 @@ const Home = () => {
   }, [selected]);
   console.log(videos);
   return (
-    <div className="flex w-screen">
-      {
-        <Aside
-          categories={categories}
-          selected={selected}
-          setSelected={setSelected}
-        />
-      }
-      <div className="grow grid grid-cols-4 grid-rows-4 gap-4 m-16">
-        {videos.length > 0 &&
-          videos.map((video, index) => {
-            return (
-              <div key={index}>
-                <img
-                  src={video.snippet.thumbnails.medium.url}
-                  alt=""
-                  className="rounded-xl"
-                />
-              </div>
-            );
-          })}
-      </div>
-    </div>
+    <>
+      {videos.length > 0 &&
+        videos.map((video, index) => {
+          return (
+            <div
+              key={index}
+              className="flex flex-col justify-center items-center"
+            >
+              <img
+                src={video.snippet.thumbnails.medium.url}
+                alt=""
+                className="rounded-xl"
+              />
+            </div>
+          );
+        })}
+    </>
   );
 };
 
