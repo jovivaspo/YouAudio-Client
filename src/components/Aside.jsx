@@ -6,20 +6,20 @@ const Aside = ({ categories, selected, setSelected, open }) => {
 
   useEffect(() => {
     if (ref.current) {
+      ref.current.style.height = "calc(100% - 56px)"
+     
       open
         ? (ref.current.style.transform = "translateX(0)")
         : (ref.current.style.transform = "translateX(-100%)");
     }
   }, [open]);
 
-  console.log(open);
-
   return (
     <aside
       ref={ref}
-      className="fixed top-0 left-0 bg-black opacity-90 lg:bg-transparent text-white w-2/3 max-w-xs mt-14 h-screen border-r-2 border-gray-500 ease-linear duration-100"
+      className="fixed top-0 left-0 z-10 bg-black opacity-90 lg:bg-transparent text-white w-80 my-14 p-10  border-r-2 border-gray-500 ease-linear duration-100 -translate-x-full"
     >
-      <ul className="h-full flex flex-col justify-around">
+      <ul className="h-full flex flex-col justify-around ">
         {selected &&
           Object.keys(categories).map((category, index) => {
             return (

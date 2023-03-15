@@ -1,6 +1,6 @@
 export const categories = {
   trending: "trending",
-  films: "peliculas",
+  animation: "animación",
   autos: "coches",
   music: "música",
   animals: "animales",

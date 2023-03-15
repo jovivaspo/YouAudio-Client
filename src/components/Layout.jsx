@@ -3,14 +3,17 @@ import Navbar from "./Navbar";
 import Aside from "./Aside";
 import { Globalcontext } from "../contexts/GlobalContext";
 import { categories } from "../helpers/categories";
+import Content from "./Content";
+import { useResize } from "../hooks/useResize";
 
 const Layout = ({ children }) => {
   const { selected, setSelected } = useContext(Globalcontext);
   const [open, setOpen] = useState(false);
+  const size = useResize();
 
   return (
     <div className="relative z-0 bg-dark h-screen w-screen overflow-x-hidden">
-      <Navbar setOpen={setOpen} open={open} />
+      <Navbar setOpen={setOpen} open={open} size={size}/>
       <div className="flex w-screen">
         {
           <Aside
@@ -20,9 +23,7 @@ const Layout = ({ children }) => {
             open={open}
           />
         }
-        <div className="grow grid grid-cols-1 grid-rows-1 gap-6 my-10 mx-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-          {children}
-        </div>
+       <Content open={open} size={size}>{children}</Content>
       </div>
     </div>
   );

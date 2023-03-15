@@ -5,8 +5,7 @@ import MenuButton from "./MenuButton";
 import Search from "./Search";
 import SearchButton from "./SearchButton";
 
-const Navbar = ({ setOpen, open }) => {
-  const size = useResize();
+const Navbar = ({ setOpen, open, size }) => {
   const { setActive, searchRef, handlerSearch, handlerChange, search } =
     useSearch(size);
 

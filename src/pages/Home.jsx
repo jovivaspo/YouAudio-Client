@@ -20,13 +20,14 @@ const Home = () => {
   }, [selected]);
   console.log(videos);
   return (
-    <>
-      {videos.length > 0 &&
+
+     <div className="grid grid-cols-1 grid-rows-1 gap-6 m-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center justify-items-center h-full">
+     {videos.length > 0 &&
         videos.map((video, index) => {
           return (
             <div
               key={index}
-              className="flex flex-col justify-center items-center"
+              className="flex flex-col justify-center items-center max-w-xs min-w-min"
             >
               <img
                 src={video.snippet.thumbnails.medium.url}
@@ -36,7 +37,8 @@ const Home = () => {
             </div>
           );
         })}
-    </>
+        </div>
+    
   );
 };
 
