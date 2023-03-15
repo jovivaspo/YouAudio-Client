@@ -1,18 +1,38 @@
 import ItemAside from "./ItemAside";
 import { useEffect, useRef } from "react";
 
-const Aside = ({ categories, selected, setSelected, open }) => {
+const Aside = ({ categories, selected, setSelected, open, setOpen, size }) => {
   const ref = useRef(null);
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.style.height = "calc(100% - 56px)"
-     
+      ref.current.style.height = "calc(100% - 56px)";
+
       open
         ? (ref.current.style.transform = "translateX(0)")
         : (ref.current.style.transform = "translateX(-100%)");
     }
   }, [open]);
+
+  useEffect(() => {
+    function handlerClick(e) {
+      if (open && !ref.current.contains(e.target) && size <= 640) {
+        setOpen(false);
+      }
+    }
+    if (ref.current) {
+      document.addEventListener("mousedown", handlerClick);
+      return () => {
+        document.removeEventListener("mousedown", handlerClick);
+      };
+    }
+  }, [open, ref]);
+
+  useEffect(() => {
+    if (open && size <= 640) {
+      setOpen(false);
+    }
+  }, [selected]);
 
   return (
     <aside

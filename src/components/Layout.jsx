@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="relative z-0 bg-dark h-screen w-screen overflow-x-hidden">
-      <Navbar setOpen={setOpen} open={open} size={size}/>
+      <Navbar setOpen={setOpen} open={open} size={size} />
       <div className="flex w-screen">
         {
           <Aside
@@ -21,9 +21,13 @@ const Layout = ({ children }) => {
             selected={selected}
             setSelected={setSelected}
             open={open}
+            setOpen={setOpen}
+            size={size}
           />
         }
-       <Content open={open} size={size}>{children}</Content>
+        <Content open={open} size={size}>
+          {children}
+        </Content>
       </div>
     </div>
   );
