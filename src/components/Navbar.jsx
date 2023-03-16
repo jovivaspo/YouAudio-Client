@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useResize } from "../hooks/useResize";
 import { useSearch } from "../hooks/useSearch";
 
@@ -14,7 +15,9 @@ const Navbar = ({ setOpen, open, size }) => {
       <div className="relative h-14 sm:h-16 px-4 flex items-center justify-between gap-1">
         <div className="flex gap-4">
           <MenuButton setOpen={setOpen} open={open} />
-          <h2 className="text-white text-xl justify-items-start">YouAudio</h2>
+          <Link to="/">
+            <h2 className="text-white text-xl justify-items-start">YouAudio</h2>
+          </Link>
         </div>
         <Search
           ref={searchRef}

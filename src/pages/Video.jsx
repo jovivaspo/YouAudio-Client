@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 
 const Video = () => {
   const { id } = useParams();
-  return <div>Video</div>;
+
+  return <div className="text-white">{id}</div>;
 };
 
 export default Video;

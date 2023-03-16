@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import api from "../api/api";
+import { useNavigate } from "react-router-dom";
 
 const useSearch = (size) => {
   const [active, setActive] = useState(false);
   const searchRef = useRef();
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const handlerChange = (e) => {
     setSearch(e.target.value);
@@ -15,13 +17,7 @@ const useSearch = (size) => {
     if (!search) {
       return;
     }
-    try {
-      const { data } = await api.get(`/video/search/${search}`);
-
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+    navigate(`/search/${search}`);
   };
 
   useEffect(() => {
