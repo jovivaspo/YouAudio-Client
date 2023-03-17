@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const VideoItem = ({ video }) => {
-  console.log(video);
   return (
     <div className="flex flex-col justify-center items-center max-w-xs min-w-min">
       <Link to={`/video/${video.id.videoId || video.id}`}>
@@ -10,7 +9,7 @@ const VideoItem = ({ video }) => {
           src={
             video.snippet?.thumbnails.medium.url ||
             video.thumbnail ||
-            video.thumbnails[0].url ||
+            video.thumbnails[1].url ||
             ""
           }
           alt=""
@@ -28,7 +27,8 @@ const VideoItem = ({ video }) => {
             to={`/channel/${
               video.snippet?.channelId ||
               video.author?.channelID ||
-              video.channel.id
+              video.channel?.id ||
+              video.author?.id
             }`}
           >
             {video.snippet?.channelTitle ||
