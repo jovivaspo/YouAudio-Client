@@ -15,8 +15,6 @@ const Channel = () => {
   const { setLoading, loading, setAlert } = useContext(Globalcontext);
   const { id } = useParams();
 
-  console.log(playlists);
-
   useEffect(() => {
     const getChannel = async () => {
       try {

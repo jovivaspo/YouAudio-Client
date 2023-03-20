@@ -22,7 +22,7 @@ const MainVideo = ({ infoVideo }) => {
       JSON.stringify({ ...audio, isPlaying: !audio.isPlaying })
     );
     if (ref.current) {
-      ref.current.style.opacity = "50%";
+      ref.current.style.opacity = "30%";
       const timeVisibility = setTimeout(() => {
         ref.current.style.opacity = "0";
       }, [500]);
@@ -43,7 +43,7 @@ const MainVideo = ({ infoVideo }) => {
           </div>
         )}
         <div
-          className="absolute w-full h-full flex justify-center items-center"
+          className="absolute z-20 w-full h-full flex justify-center items-center"
           onClick={handlerClick}
         >
           <div

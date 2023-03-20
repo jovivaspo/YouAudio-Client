@@ -11,11 +11,14 @@ import {
   onDuration,
   onPlaying,
 } from "../store/player/playerSlice";
+import { useNavigate } from "react-router-dom";
 
 const Player = () => {
   const { audio } = usePlayer();
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   // references
   const audioPlayer = useRef(); // reference our audio component
@@ -23,6 +26,12 @@ const Player = () => {
   const animationRef = useRef(); // reference the animation
 
   useEffect(() => {
+    const controlEnd = () => {
+      dispatch(onPlaying({ isPlaying: false }));
+      setTimeout(() => {
+        handlerNext();
+      }, [2500]);
+    };
     if (audioPlayer.current && progressBar.current) {
       audioPlayer.current.addEventListener("loadedmetadata", () => {
         const seconds = Math.floor(audioPlayer.current.duration);
@@ -42,6 +51,8 @@ const Player = () => {
           `${(audio.currentTime / seconds) * 100}%`
         );
       });
+
+      audioPlayer.current.addEventListener("ended", controlEnd);
     }
   }, []);
 
@@ -56,6 +67,10 @@ const Player = () => {
       }
     }
   }, [audio?.isPlaying]);
+
+  const handlerNext = () => {
+    navigate(`/video/${audio.videosRelated[0].id}`);
+  };
 
   const togglePlayPause = () => {
     const prevValue = audio.isPlaying;
@@ -102,14 +117,15 @@ const Player = () => {
         ref={progressBar}
         onChange={changeRange}
       />
-      <div className="absolute bottom-2 left-4 flex gap-6 items-center">
+      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-11 bg-black opacity-10"></div>
+      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-10">
         <button>
           <PrevIcon />
         </button>
         <button onClick={togglePlayPause}>
           {audio.isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
-        <button>
+        <button onClick={handlerNext}>
           <NextIcon />
         </button>
         <div className="flex gap-2">

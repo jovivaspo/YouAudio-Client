@@ -9,6 +9,7 @@ const Search = () => {
   const { q } = useParams();
   const { setLoading, loading, setAlert } = useContext(Globalcontext);
   const [videos, setVideos] = useState([]);
+
   useEffect(() => {
     const getVideos = async () => {
       try {
@@ -24,7 +25,7 @@ const Search = () => {
     };
     getVideos();
   }, [q]);
-  console.log(videos);
+
   if (loading) return <Loader />;
   return (
     <>
