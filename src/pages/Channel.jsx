@@ -6,6 +6,7 @@ import VideoItem from "../components/VideoItem";
 import Loader from "../components/Loader";
 import ChannelHeader from "../components/ChannelHeader";
 import ItemPlaylist from "../components/ItemPlaylist";
+import { getNameUser } from "../helpers/getNameUser";
 
 const Channel = () => {
   const [channel, setChannel] = useState(null);
@@ -36,12 +37,9 @@ const Channel = () => {
     const getPlaylist = async () => {
       try {
         setLoading(true);
-        const namePlaylist = channel.author.name
-          .normalize("NFD")
-          .replaceAll(" ", "")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^\w\s]/gi, "");
-        const { data } = await api.get(`/video/playlist/${namePlaylist}`);
+        const user = await getNameUser(channel);
+        console.log(user);
+        const { data } = await api.get(`/video/playlist/${user}`);
         setLoading(false);
         setPlaylists(data.playlists);
       } catch (error) {
