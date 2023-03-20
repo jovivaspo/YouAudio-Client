@@ -6,6 +6,8 @@ const initialState = {
   isPlaying: false,
   currentTime: 0,
   duration: 0,
+  info: null,
+  videosRelated: [],
 };
 
 export const playerSlice = createSlice({
@@ -17,6 +19,13 @@ export const playerSlice = createSlice({
       : initialState,
   },
   reducers: {
+    onLoadInfo: (state, { payload }) => {
+      state.audio = {
+        ...state.audio,
+        info: payload.info,
+        videosRelated: payload.videosRelated,
+      };
+    },
     onConverter: (state) => {
       state.status = "converting";
     },
@@ -46,6 +55,7 @@ export const playerSlice = createSlice({
 });
 
 export const {
+  onLoadInfo,
   onConverter,
   onReady,
   onPlaying,

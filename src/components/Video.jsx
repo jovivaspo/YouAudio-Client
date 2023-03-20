@@ -34,7 +34,7 @@ const MainVideo = ({ infoVideo }) => {
     <div className="w-full flex flex-col gap-2 xl:p-4 text-white ">
       <div className="relative ">
         {status === "converting" && (
-          <div className="h-full w-full absolute top-0 left-0 bg-black  flex justify-center items-center ">
+          <div className="h-full w-full absolute top-0 left-0 bg-black opacity-60 flex justify-center items-center ">
             <img
               src={converter}
               alt="Convirtiendo vídeo"
@@ -62,7 +62,7 @@ const MainVideo = ({ infoVideo }) => {
           alt={infoVideo.title}
           className="w-full"
         />
-        {<Player id={infoVideo.id} />}
+        {status === "ready" && <Player />}
       </div>
       <h3 className="text-lg sm:text-xl lg:text-2xl">{infoVideo.title}</h3>
       <p className="flex gap-2 text-gray-400">

@@ -5,35 +5,39 @@ import api from "../api/api";
 import Loader from "../components/Loader";
 import VideosRelated from "../components/VideosRelated";
 import MainVideo from "../components/Video";
+import { usePlayer } from "../hooks/usePlayer";
 
 const Video = () => {
   const { id } = useParams();
-  const { setAlert, loading, setLoading } = useContext(Globalcontext);
-  const [infoVideo, setInfoVideo] = useState(null);
-  const [videosRelated, setVideosRelated] = useState(null);
+  const { loading } = useContext(Globalcontext);
+  const { loadInfo, loadAudio, resetAudio, status, audio } = usePlayer();
 
   useEffect(() => {
-    const getVideoInfo = async () => {
-      try {
-        setLoading(true);
-        const { data } = await api.get(`/video/info/${id}`);
-        setInfoVideo(data.videoDetails);
-        setVideosRelated(data.relatedVideos);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        setAlert(error.response.data.error);
-      }
-    };
-    getVideoInfo();
+    if (audio.id && id !== audio.id) {
+      resetAudio({ id: audio.id });
+    }
   }, [id]);
+
+  useEffect(() => {
+    if (!audio.id) {
+      loadInfo({ id });
+    }
+  }, [audio.id]);
+
+  useEffect(() => {
+    if (audio.info && audio.videosRelated.length >= 0) {
+      loadAudio({ id });
+    }
+  }, [audio.info, audio.videosRelated]);
 
   if (loading) return <Loader />;
 
   return (
     <div className="w-full flex flex-col xl:flex-row xl:h-screen ">
-      {infoVideo && <MainVideo infoVideo={infoVideo} />}
-      {videosRelated && <VideosRelated videosRelated={videosRelated} />}
+      {audio.info && <MainVideo infoVideo={audio.info} />}
+      {audio.videosRelated && (
+        <VideosRelated videosRelated={audio.videosRelated} />
+      )}
     </div>
   );
 };

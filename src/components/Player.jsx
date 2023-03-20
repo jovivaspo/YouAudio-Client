@@ -12,8 +12,8 @@ import {
   onPlaying,
 } from "../store/player/playerSlice";
 
-const Player = ({ id }) => {
-  const { status, audio, loadAudio, resetAudio } = usePlayer();
+const Player = () => {
+  const { audio } = usePlayer();
 
   const dispatch = useDispatch();
 
@@ -21,14 +21,6 @@ const Player = ({ id }) => {
   const audioPlayer = useRef(); // reference our audio component
   const progressBar = useRef(); // reference our progress bar
   const animationRef = useRef(); // reference the animation
-
-  useEffect(() => {
-    if (audio?.id && id !== audio.id) {
-      resetAudio({ id: audio.id });
-    }
-
-    loadAudio({ id });
-  }, [id]);
 
   useEffect(() => {
     if (audioPlayer.current && progressBar.current) {
@@ -51,7 +43,7 @@ const Player = ({ id }) => {
         );
       });
     }
-  }, [audio]);
+  }, []);
 
   useEffect(() => {
     if (audioPlayer.current) {
@@ -101,41 +93,37 @@ const Player = ({ id }) => {
     );
   };
 
-  if (status === "ready") {
-    return (
-      <>
-        <audio ref={audioPlayer} src={audio.url} preload="auto" />
-        <input
-          type="range"
-          className=" absolute bottom-10 w-full cursor-pointer"
-          ref={progressBar}
-          onChange={changeRange}
-        />
-        <div className="absolute bottom-2 left-4 flex gap-6 items-center">
-          <button>
-            <PrevIcon />
-          </button>
-          <button onClick={togglePlayPause}>
-            {audio.isPlaying ? <PauseIcon /> : <PlayIcon />}
-          </button>
-          <button>
-            <NextIcon />
-          </button>
-          <div className="flex gap-2">
-            <span className="currentTime">
-              {calculateTime(audio.currentTime)}
-            </span>
-            <span>/</span>
-            {audio.duration && (
-              <span className="duration">{calculateTime(audio.duration)}</span>
-            )}
-          </div>
+  return (
+    <>
+      <audio ref={audioPlayer} src={audio.url} preload="auto" />
+      <input
+        type="range"
+        className=" absolute bottom-10 w-full cursor-pointer"
+        ref={progressBar}
+        onChange={changeRange}
+      />
+      <div className="absolute bottom-2 left-4 flex gap-6 items-center">
+        <button>
+          <PrevIcon />
+        </button>
+        <button onClick={togglePlayPause}>
+          {audio.isPlaying ? <PauseIcon /> : <PlayIcon />}
+        </button>
+        <button>
+          <NextIcon />
+        </button>
+        <div className="flex gap-2">
+          <span className="currentTime">
+            {calculateTime(audio.currentTime)}
+          </span>
+          <span>/</span>
+          {audio.duration && (
+            <span className="duration">{calculateTime(audio.duration)}</span>
+          )}
         </div>
-      </>
-    );
-  }
-
-  return <></>;
+      </div>
+    </>
+  );
 };
 
 export default Player;
