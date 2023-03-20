@@ -17,6 +17,7 @@ export const playerSlice = createSlice({
         isPlaying: false,
         duration: 0,
         currentTime: 0,
+        id: payload.id,
       };
     },
     onPlaying: (state, { payload }) => {
@@ -28,8 +29,17 @@ export const playerSlice = createSlice({
     onDuration: (state, { payload }) => {
       state.audio = { ...state.audio, duration: payload.duration };
     },
+    onReset: (state) => {
+      state.audio = null;
+    },
   },
 });
 
-export const { onConverter, onReady, onPlaying, onCurrentTime, onDuration } =
-  playerSlice.actions;
+export const {
+  onConverter,
+  onReady,
+  onPlaying,
+  onCurrentTime,
+  onDuration,
+  onReset,
+} = playerSlice.actions;

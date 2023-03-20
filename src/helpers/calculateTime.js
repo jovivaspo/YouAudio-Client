@@ -1,10 +1,12 @@
-export const calculateTime = (secs) => {
-  if (isNaN(secs)) {
+export const calculateTime = (segundos) => {
+  if (isNaN(segundos)) {
     return " ";
   }
-  const minutes = Math.floor(secs / 60);
-  const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-  const seconds = Math.floor(secs % 60);
-  const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-  return `${returnedMinutes}:${returnedSeconds}`;
+  const horas = Math.floor(segundos / 3600);
+  segundos %= 3600;
+  const minutos = Math.floor(segundos / 60);
+  segundos %= 60;
+  return `${horas.toString().padStart(2, "0")}:${minutos
+    .toString()
+    .padStart(2, "0")}:${segundos.toString().padStart(2, "0")}`;
 };

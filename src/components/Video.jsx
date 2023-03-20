@@ -3,14 +3,34 @@ import { getDate } from "../helpers/getDate";
 import Player from "../components/Player";
 import { usePlayer } from "../hooks/usePlayer";
 import converter from "../assets/converter.svg";
+import { useDispatch } from "react-redux";
+import { onPlaying } from "../store/player/playerSlice";
+import PauseIcon from "./icons/PauseIcon";
+import PlayIcon from "./icons/PlayIcon";
+import { useRef } from "react";
 
 const MainVideo = ({ infoVideo }) => {
-  const { status } = usePlayer();
+  const { status, audio } = usePlayer();
+  const dispatch = useDispatch();
+
+  const ref = useRef();
+
+  const handlerClick = () => {
+    dispatch(onPlaying({ isPlaying: !audio.isPlaying }));
+    if (ref.current) {
+      ref.current.style.opacity = "50%";
+      const timeVisibility = setTimeout(() => {
+        ref.current.style.opacity = "0";
+      }, [500]);
+      return () => clearTimeout(timeVisibility);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-2 xl:p-4 text-white ">
       <div className="relative ">
         {status === "converting" && (
-          <div className="h-full w-full absolute top-0 left-0 bg-black opacity-80 flex justify-center items-center">
+          <div className="h-full w-full absolute top-0 left-0 bg-black  flex justify-center items-center ">
             <img
               src={converter}
               alt="Convirtiendo vídeo"
@@ -18,6 +38,21 @@ const MainVideo = ({ infoVideo }) => {
             />
           </div>
         )}
+        <div
+          className="absolute w-full h-full flex justify-center items-center"
+          onClick={handlerClick}
+        >
+          <div
+            className="w-28 h-28 rounded-full bg-black flex justify-center items-center ease-out duration-500 opacity-0"
+            ref={ref}
+          >
+            {audio?.isPlaying ? (
+              <PlayIcon width={50} height={50} />
+            ) : (
+              <PauseIcon width={50} height={50} />
+            )}
+          </div>
+        </div>
         <img
           src={infoVideo.thumbnails[infoVideo.thumbnails.length - 1].url}
           alt={infoVideo.title}

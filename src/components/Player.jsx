@@ -13,7 +13,7 @@ import {
 } from "../store/player/playerSlice";
 
 const Player = ({ id }) => {
-  const { status, audio, loadAudio } = usePlayer();
+  const { status, audio, loadAudio, resetAudio } = usePlayer();
 
   const dispatch = useDispatch();
 
@@ -23,11 +23,15 @@ const Player = ({ id }) => {
   const animationRef = useRef(); // reference the animation
 
   useEffect(() => {
+    if (audio && id !== audio.id) {
+      resetAudio({ id: audio.id });
+    }
+
     loadAudio({ id });
-  }, []);
+  }, [id]);
 
   useEffect(() => {
-    if (audioPlayer.current) {
+    if (audioPlayer.current && audio) {
       audioPlayer.current.addEventListener("loadedmetadata", () => {
         const seconds = Math.floor(audioPlayer.current.duration);
         dispatch(onDuration({ duration: seconds }));
@@ -36,16 +40,21 @@ const Player = ({ id }) => {
     }
   }, [audio]);
 
+  useEffect(() => {
+    if (audioPlayer.current) {
+      if (audio.isPlaying) {
+        audioPlayer.current.play();
+        animationRef.current = requestAnimationFrame(whilePlaying);
+      } else {
+        audioPlayer.current.pause();
+        cancelAnimationFrame(animationRef.current);
+      }
+    }
+  }, [audio?.isPlaying]);
+
   const togglePlayPause = () => {
     const prevValue = audio.isPlaying;
     dispatch(onPlaying({ isPlaying: !prevValue }));
-    if (!prevValue) {
-      audioPlayer.current.play();
-      animationRef.current = requestAnimationFrame(whilePlaying);
-    } else {
-      audioPlayer.current.pause();
-      cancelAnimationFrame(animationRef.current);
-    }
   };
 
   const whilePlaying = () => {
@@ -55,8 +64,10 @@ const Player = ({ id }) => {
   };
 
   const changeRange = () => {
-    audioPlayer.current.currentTime = progressBar.current.value;
-    changePlayerCurrentTime();
+    if (audioPlayer.current) {
+      audioPlayer.current.currentTime = progressBar.current.value;
+      changePlayerCurrentTime();
+    }
   };
 
   const changePlayerCurrentTime = () => {
@@ -87,7 +98,7 @@ const Player = ({ id }) => {
           <PrevIcon />
         </button>
         <button onClick={togglePlayPause}>
-          {audioPlayer?.current?.paused ? <PlayIcon /> : <PauseIcon />}
+          {audio.isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
         <button>
           <NextIcon />

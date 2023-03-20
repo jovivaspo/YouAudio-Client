@@ -1,7 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { openDB } from "idb";
 import api from "../api/api";
-import { onConverter, onReady } from "../store/player/playerSlice";
+import { onConverter, onReady, onReset } from "../store/player/playerSlice";
+
+const database = {
+  dbName: "YouAudioDB",
+  dbVersion: 1,
+  storeName: "myAudioStore",
+};
 
 export const usePlayer = () => {
   const { status, audio } = useSelector((state) => state.player);
@@ -10,19 +16,14 @@ export const usePlayer = () => {
   const loadAudio = async ({ id }) => {
     dispatch(onConverter());
 
-    const dbName = "YouAudioDB";
-    const dbVersion = 1;
-    const storeName = "myAudioStore";
-    const key = id;
-
     // abrir la base de datos
-    const db = await openDB(dbName, dbVersion, {
+    const db = await openDB(database.dbName, database.dbVersion, {
       upgrade(db) {
-        db.createObjectStore(storeName);
+        db.createObjectStore(database.storeName);
       },
     });
 
-    let file = await db.get(storeName, key);
+    let file = await db.get(database.storeName, id);
 
     if (!file) {
       console.log("El archivo no están en la DB");
@@ -34,7 +35,7 @@ export const usePlayer = () => {
         const blob = await response.data;
 
         // almacenar el archivo en IndexedDB
-        await db.put(storeName, blob, key);
+        await db.put(database.storeName, blob, id);
 
         file = blob;
       } catch (error) {
@@ -43,7 +44,22 @@ export const usePlayer = () => {
     }
 
     const url = URL.createObjectURL(file);
-    dispatch(onReady({ url }));
+    dispatch(onReady({ url, id }));
+  };
+
+  const resetAudio = async ({ id }) => {
+    // abrir la base de datos
+    const db = await openDB(database.dbName, database.dbVersion, {
+      upgrade(db) {
+        db.createObjectStore(database.storeName);
+      },
+    });
+    //Buscar el archivo
+    let file = await db.get(database.storeName, id);
+    if (file) {
+      await db.delete(database.storeName, id);
+    }
+    dispatch(onReset());
   };
 
   return {
@@ -51,5 +67,6 @@ export const usePlayer = () => {
     audio,
 
     loadAudio,
+    resetAudio,
   };
 };
