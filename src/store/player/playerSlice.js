@@ -1,10 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  url: null,
+  id: null,
+  isPlaying: false,
+  currentTime: 0,
+  duration: 0,
+};
+
 export const playerSlice = createSlice({
   name: "player",
   initialState: {
     status: null,
-    audio: null,
+    audio: localStorage.getItem("audio")
+      ? JSON.parse(localStorage.getItem("audio"))
+      : initialState,
   },
   reducers: {
     onConverter: (state) => {
@@ -13,10 +23,8 @@ export const playerSlice = createSlice({
     onReady: (state, { payload }) => {
       state.status = "ready";
       state.audio = {
+        ...state.audio,
         url: payload.url,
-        isPlaying: false,
-        duration: 0,
-        currentTime: 0,
         id: payload.id,
       };
     },
@@ -30,7 +38,7 @@ export const playerSlice = createSlice({
       state.audio = { ...state.audio, duration: payload.duration };
     },
     onReset: (state) => {
-      state.audio = null;
+      state.audio = initialState;
     },
   },
 });

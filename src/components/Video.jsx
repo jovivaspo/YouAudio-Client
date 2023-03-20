@@ -17,6 +17,10 @@ const MainVideo = ({ infoVideo }) => {
 
   const handlerClick = () => {
     dispatch(onPlaying({ isPlaying: !audio.isPlaying }));
+    localStorage.setItem(
+      "audio",
+      JSON.stringify({ ...audio, isPlaying: !audio.isPlaying })
+    );
     if (ref.current) {
       ref.current.style.opacity = "50%";
       const timeVisibility = setTimeout(() => {

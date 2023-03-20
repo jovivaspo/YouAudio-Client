@@ -45,6 +45,7 @@ export const usePlayer = () => {
 
     const url = URL.createObjectURL(file);
     dispatch(onReady({ url, id }));
+    localStorage.setItem("audio", JSON.stringify({ ...audio, url, id }));
   };
 
   const resetAudio = async ({ id }) => {

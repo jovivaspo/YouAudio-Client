@@ -35,6 +35,10 @@ const Player = ({ id }) => {
       audioPlayer.current.addEventListener("loadedmetadata", () => {
         const seconds = Math.floor(audioPlayer.current.duration);
         dispatch(onDuration({ duration: seconds }));
+        localStorage.setItem(
+          "audio",
+          JSON.stringify({ ...audio, duration: seconds })
+        );
         progressBar.current.max = seconds;
       });
     }
@@ -55,6 +59,10 @@ const Player = ({ id }) => {
   const togglePlayPause = () => {
     const prevValue = audio.isPlaying;
     dispatch(onPlaying({ isPlaying: !prevValue }));
+    localStorage.setItem(
+      "audio",
+      JSON.stringify({ ...audio, isPlaying: !prevValue })
+    );
   };
 
   const whilePlaying = () => {
@@ -76,6 +84,10 @@ const Player = ({ id }) => {
       `${(progressBar.current.value / audio.duration) * 100}%`
     );
     dispatch(onCurrentTime({ currentTime: progressBar.current.value }));
+    localStorage.setItem(
+      "audio",
+      JSON.stringify({ ...audio, currentTime: progressBar.current.value })
+    );
   };
 
   if (status !== "ready") {
@@ -87,7 +99,9 @@ const Player = ({ id }) => {
       <audio ref={audioPlayer} src={audio.url} preload="auto" />
       <input
         type="range"
-        defaultValue="0"
+        defaultValue={
+          JSON.parse(localStorage.getItem("audio")).currentTime || "0"
+        }
         max="100"
         className=" absolute bottom-10 w-full cursor-pointer"
         ref={progressBar}
