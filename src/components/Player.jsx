@@ -23,7 +23,7 @@ const Player = ({ id }) => {
   const animationRef = useRef(); // reference the animation
 
   useEffect(() => {
-    if (audio && id !== audio.id) {
+    if (audio?.id && id !== audio.id) {
       resetAudio({ id: audio.id });
     }
 
@@ -31,15 +31,24 @@ const Player = ({ id }) => {
   }, [id]);
 
   useEffect(() => {
-    if (audioPlayer.current && audio) {
+    if (audioPlayer.current && progressBar.current) {
       audioPlayer.current.addEventListener("loadedmetadata", () => {
         const seconds = Math.floor(audioPlayer.current.duration);
+
         dispatch(onDuration({ duration: seconds }));
         localStorage.setItem(
           "audio",
           JSON.stringify({ ...audio, duration: seconds })
         );
-        progressBar.current.max = seconds;
+        progressBar.current.max = seconds || 0;
+
+        audioPlayer.current.currentTime = audio.currentTime;
+        progressBar.current.value = audioPlayer.current.currentTime;
+
+        progressBar.current.style.setProperty(
+          "--seek-before-width",
+          `${(audio.currentTime / seconds) * 100}%`
+        );
       });
     }
   }, [audio]);
@@ -66,9 +75,11 @@ const Player = ({ id }) => {
   };
 
   const whilePlaying = () => {
-    progressBar.current.value = audioPlayer.current.currentTime;
-    changePlayerCurrentTime();
-    animationRef.current = requestAnimationFrame(whilePlaying);
+    if (progressBar.current && audioPlayer.current) {
+      progressBar.current.value = audioPlayer.current.currentTime;
+      changePlayerCurrentTime();
+      animationRef.current = requestAnimationFrame(whilePlaying);
+    }
   };
 
   const changeRange = () => {
@@ -90,45 +101,41 @@ const Player = ({ id }) => {
     );
   };
 
-  if (status !== "ready") {
-    return <></>;
+  if (status === "ready") {
+    return (
+      <>
+        <audio ref={audioPlayer} src={audio.url} preload="auto" />
+        <input
+          type="range"
+          className=" absolute bottom-10 w-full cursor-pointer"
+          ref={progressBar}
+          onChange={changeRange}
+        />
+        <div className="absolute bottom-2 left-4 flex gap-6 items-center">
+          <button>
+            <PrevIcon />
+          </button>
+          <button onClick={togglePlayPause}>
+            {audio.isPlaying ? <PauseIcon /> : <PlayIcon />}
+          </button>
+          <button>
+            <NextIcon />
+          </button>
+          <div className="flex gap-2">
+            <span className="currentTime">
+              {calculateTime(audio.currentTime)}
+            </span>
+            <span>/</span>
+            {audio.duration && (
+              <span className="duration">{calculateTime(audio.duration)}</span>
+            )}
+          </div>
+        </div>
+      </>
+    );
   }
 
-  return (
-    <>
-      <audio ref={audioPlayer} src={audio.url} preload="auto" />
-      <input
-        type="range"
-        defaultValue={
-          JSON.parse(localStorage.getItem("audio")).currentTime || "0"
-        }
-        max="100"
-        className=" absolute bottom-10 w-full cursor-pointer"
-        ref={progressBar}
-        onChange={changeRange}
-      />
-      <div className="absolute bottom-2 left-4 flex gap-6 items-center">
-        <button>
-          <PrevIcon />
-        </button>
-        <button onClick={togglePlayPause}>
-          {audio.isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </button>
-        <button>
-          <NextIcon />
-        </button>
-        <div className="flex gap-2">
-          <span className="currentTime">
-            {calculateTime(audio.currentTime)}
-          </span>
-          <span>/</span>
-          {audio.duration && (
-            <span className="duration">{calculateTime(audio.duration)}</span>
-          )}
-        </div>
-      </div>
-    </>
-  );
+  return <></>;
 };
 
 export default Player;

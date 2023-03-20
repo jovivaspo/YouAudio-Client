@@ -62,7 +62,7 @@ const MainVideo = ({ infoVideo }) => {
           alt={infoVideo.title}
           className="w-full"
         />
-        <Player id={infoVideo.id} />
+        {<Player id={infoVideo.id} />}
       </div>
       <h3 className="text-lg sm:text-xl lg:text-2xl">{infoVideo.title}</h3>
       <p className="flex gap-2 text-gray-400">

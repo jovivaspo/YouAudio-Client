@@ -61,6 +61,7 @@ export const usePlayer = () => {
       await db.delete(database.storeName, id);
     }
     dispatch(onReset());
+    localStorage.removeItem("audio");
   };
 
   return {

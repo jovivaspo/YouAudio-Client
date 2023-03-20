@@ -26,6 +26,7 @@ export const playerSlice = createSlice({
         ...state.audio,
         url: payload.url,
         id: payload.id,
+        isPlaying: false,
       };
     },
     onPlaying: (state, { payload }) => {
@@ -38,6 +39,7 @@ export const playerSlice = createSlice({
       state.audio = { ...state.audio, duration: payload.duration };
     },
     onReset: (state) => {
+      state.status = null;
       state.audio = initialState;
     },
   },
