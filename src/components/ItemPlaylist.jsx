@@ -1,10 +1,15 @@
 import React, { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { onInit } from "../store/playlist/playlistSlice";
 import PlaylistIcon from "./icons/PlaylistIcon";
 
-const ItemPlaylist = ({ video }) => {
+const ItemPlaylist = ({ playlist }) => {
   const refImg = useRef();
   const ref = useRef();
+
+  const navigate = useNavigate();
+  const distpatch = useDispatch();
 
   const handlerOver = (e) => {
     if (ref.current.contains(e.target) || refImg.current.contains(e.target)) {
@@ -18,10 +23,26 @@ const ItemPlaylist = ({ video }) => {
     }
   };
 
+  const handlerClick = () => {
+    distpatch(
+      onInit({ items: playlist.items, title: playlist.title, id: playlist.id })
+    );
+    localStorage.setItem(
+      "playlist",
+      JSON.stringify({
+        items: playlist.items,
+        title: playlist.title,
+        id: playlist.id,
+        currentAudio: playlist.items[0],
+      })
+    );
+    navigate(`/playlist/${playlist.id}`);
+  };
+
   return (
     <div className="flex flex-col justify-center items-center max-w-xs min-w-min">
-      <Link
-        to={`/playlist/${video.id.videoId || video.id}`}
+      <div
+        onClick={handlerClick}
         className="relative"
         onMouseOver={handlerOver}
         onMouseOut={handlerOut}
@@ -30,28 +51,26 @@ const ItemPlaylist = ({ video }) => {
           ref={ref}
           className="absolute z-10 top-0 right-0 w-1/3 h-full bg-black opacity-60 rounded-r-xl flex flex-col justify-center items-center"
         >
-          <p className="text-white text-lg">{video.estimatedItemCount}</p>
+          <p className="text-white text-lg">{playlist.estimatedItemCount}</p>
           <PlaylistIcon />
         </div>
         <img
           ref={refImg}
           src={
-            video.snippet?.thumbnails.medium.url ||
-            video.thumbnails[0].url ||
+            playlist.snippet?.thumbnails.medium.url ||
+            playlist.thumbnails[0].url ||
             ""
           }
           alt=""
           className="rounded-xl"
         />
-      </Link>
+      </div>
       <div className="flex flex-col justify-start w-full my-2">
         <p className="text-white">
-          <strong>{video.snippet?.title || video.title}</strong>
+          <strong>{playlist.title}</strong>
         </p>
 
-        <span className="text-gray-500">
-          {video.snippet?.channelTitle || video.author.name}
-        </span>
+        <span className="text-gray-500">{playlist.author.name}</span>
       </div>
     </div>
   );

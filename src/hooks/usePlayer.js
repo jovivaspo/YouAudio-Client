@@ -23,6 +23,7 @@ export const usePlayer = () => {
 
   const loadAudio = async ({ id }) => {
     dispatch(onConverter());
+    localStorage.setItem("status-audio", "converting");
 
     // abrir la base de datos
     const db = await openDB(database.dbName, database.dbVersion, {
@@ -53,6 +54,7 @@ export const usePlayer = () => {
     const url = URL.createObjectURL(file);
     dispatch(onReady({ url, id }));
     localStorage.setItem("audio", JSON.stringify({ ...audio, url, id }));
+    localStorage.setItem("status-audio", "ready");
   };
 
   const resetAudio = async ({ id }) => {
@@ -70,6 +72,7 @@ export const usePlayer = () => {
       }
       dispatch(onReset());
       localStorage.removeItem("audio");
+      localStorage.removeItem("status-audio");
     } catch (error) {
       console.log(error);
     }

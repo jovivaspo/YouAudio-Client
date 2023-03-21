@@ -36,10 +36,9 @@ const Channel = () => {
       try {
         setLoading(true);
         const user = await getNameUser(channel);
-        console.log(user);
         const { data } = await api.get(`/video/playlist/${user}`);
-        setLoading(false);
         setPlaylists(data.playlists);
+        setLoading(false);
       } catch (error) {
         console.log(error);
         setAlert(error.response.data.error);
@@ -73,7 +72,7 @@ const Channel = () => {
       {selected === "playlists" && playlists && (
         <div className="grid grid-cols-1 grid-rows-1 gap-6 m-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center justify-items-center h-full">
           {playlists.map((el, index) => {
-            return <ItemPlaylist video={el} key={index} />;
+            return <ItemPlaylist playlist={el} key={index} />;
           })}
         </div>
       )}

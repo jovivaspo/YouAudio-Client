@@ -10,22 +10,25 @@ import { usePlayer } from "../hooks/usePlayer";
 const Video = () => {
   const { id } = useParams();
   const { loading } = useContext(Globalcontext);
-  const { loadInfo, loadAudio, resetAudio, status, audio } = usePlayer();
+  const { loadInfo, loadAudio, resetAudio, audio } = usePlayer();
 
   useEffect(() => {
     if (audio.id && id !== audio.id) {
+      console.log("1");
       resetAudio({ id: audio.id });
     }
   }, [id]);
 
   useEffect(() => {
     if (!audio.id) {
+      console.log("2");
       loadInfo({ id });
     }
   }, [audio.id]);
 
   useEffect(() => {
     if (audio.info && audio.videosRelated.length >= 0) {
+      console.log("3");
       loadAudio({ id });
     }
   }, [audio.info, audio.videosRelated]);

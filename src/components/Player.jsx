@@ -113,12 +113,12 @@ const Player = () => {
       <audio ref={audioPlayer} src={audio.url} preload="auto" />
       <input
         type="range"
-        className=" absolute bottom-10 w-full cursor-pointer"
+        className=" absolute bottom-10 w-full cursor-pointer z-30"
         ref={progressBar}
         onChange={changeRange}
       />
       <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-11 bg-black opacity-10"></div>
-      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-10">
+      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-10 z-30">
         <button>
           <PrevIcon />
         </button>

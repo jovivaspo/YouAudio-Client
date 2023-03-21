@@ -13,7 +13,9 @@ const initialState = {
 export const playerSlice = createSlice({
   name: "player",
   initialState: {
-    status: null,
+    status: localStorage.getItem("status-audio")
+      ? localStorage.getItem("status-audio")
+      : null,
     audio: localStorage.getItem("audio")
       ? JSON.parse(localStorage.getItem("audio"))
       : initialState,
