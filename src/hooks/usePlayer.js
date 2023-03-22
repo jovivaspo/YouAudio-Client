@@ -3,8 +3,8 @@ import { openDB } from "idb";
 import api from "../api/api";
 import {
   onConverter,
+  onLoadAudio,
   onLoadInfo,
-  onReady,
   onReset,
 } from "../store/player/playerSlice";
 import { useContext } from "react";
@@ -17,44 +17,47 @@ const database = {
 };
 
 export const usePlayer = () => {
-  const { status, audio } = useSelector((state) => state.player);
+  const { status, currentAudio } = useSelector((state) => state.player);
   const { setAlert, setLoading } = useContext(Globalcontext);
   const dispatch = useDispatch();
 
   const loadAudio = async ({ id }) => {
-    dispatch(onConverter());
-    localStorage.setItem("status-audio", "converting");
+    try {
+      dispatch(onConverter());
+      localStorage.setItem("status-audio", "converting");
 
-    // abrir la base de datos
-    const db = await openDB(database.dbName, database.dbVersion, {
-      upgrade(db) {
-        db.createObjectStore(database.storeName);
-      },
-    });
+      // abrir la base de datos
+      const db = await openDB(database.dbName, database.dbVersion, {
+        upgrade(db) {
+          db.createObjectStore(database.storeName);
+        },
+      });
 
-    let file = await db.get(database.storeName, id);
+      //LLamada a la api
+      const response = await api.get(`/video/${id}`, {
+        responseType: "blob",
+      });
+      const blob = await response.data;
 
-    if (!file) {
-      try {
-        const response = await api.get(`/video/${id}`, {
-          responseType: "blob",
-        });
-        const blob = await response.data;
+      // almacenar el archivo en IndexedDB
+      await db.put(database.storeName, blob, id);
 
-        // almacenar el archivo en IndexedDB
-        await db.put(database.storeName, blob, id);
+      const file = blob;
 
-        file = blob;
-      } catch (error) {
-        console.log(error);
-        setAlert(error.response.data.error);
-      }
+      const url = URL.createObjectURL(file);
+
+      dispatch(onLoadAudio({ url }));
+      localStorage.setItem(
+        "currentAudio",
+        JSON.stringify({ ...currentAudio, url })
+      );
+      localStorage.setItem("status-audio", "ready");
+
+      //Borramos el archivo anterior
+    } catch (error) {
+      console.log(error);
+      setAlert("Lo sentimos, algo salió mal...");
     }
-
-    const url = URL.createObjectURL(file);
-    dispatch(onReady({ url, id }));
-    localStorage.setItem("audio", JSON.stringify({ ...audio, url, id }));
-    localStorage.setItem("status-audio", "ready");
   };
 
   const resetAudio = async ({ id }) => {
@@ -71,10 +74,11 @@ export const usePlayer = () => {
         await db.delete(database.storeName, id);
       }
       dispatch(onReset());
-      localStorage.removeItem("audio");
+      localStorage.removeItem("currentAudio");
       localStorage.removeItem("status-audio");
     } catch (error) {
       console.log(error);
+      setAlert(error.response.data.error || "Lo sentimos, algo salió mal");
     }
   };
 
@@ -84,29 +88,31 @@ export const usePlayer = () => {
       const { data } = await api.get(`/video/info/${id}`);
       dispatch(
         onLoadInfo({
+          id,
           info: data.videoDetails,
           videosRelated: data.relatedVideos,
         })
       );
       localStorage.setItem(
-        "audio",
+        "currentAudio",
         JSON.stringify({
-          ...audio,
+          ...currentAudio,
           info: data.videoDetails,
           videosRelated: data.relatedVideos,
         })
       );
+      localStorage.setItem("status-audio", "new-item-selected");
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setAlert(error.response.data.error);
+      setAlert(error.response.data.error || "Lo sentimos, algo salió mal");
     }
   };
 
   return {
     status,
-    audio,
+    currentAudio,
 
     loadAudio,
     resetAudio,

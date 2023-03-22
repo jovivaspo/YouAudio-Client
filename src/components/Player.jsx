@@ -2,9 +2,8 @@ import NextIcon from "./icons/NextIcon";
 import PauseIcon from "./icons/PauseIcon";
 import PlayIcon from "./icons/PlayIcon";
 import PrevIcon from "./icons/PrevIcon";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { calculateTime } from "../helpers/calculateTime";
-import { usePlayer } from "../hooks/usePlayer";
 import { useDispatch } from "react-redux";
 import {
   onCurrentTime,
@@ -13,9 +12,7 @@ import {
 } from "../store/player/playerSlice";
 import { useNavigate } from "react-router-dom";
 
-const Player = () => {
-  const { audio } = usePlayer();
-
+const Player = ({ currentAudio }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -38,17 +35,17 @@ const Player = () => {
 
         dispatch(onDuration({ duration: seconds }));
         localStorage.setItem(
-          "audio",
-          JSON.stringify({ ...audio, duration: seconds })
+          "currentAudio",
+          JSON.stringify({ ...currentAudio, duration: seconds })
         );
         progressBar.current.max = seconds || 0;
 
-        audioPlayer.current.currentTime = audio.currentTime;
+        audioPlayer.current.currentTime = currentAudio.currentTime;
         progressBar.current.value = audioPlayer.current.currentTime;
 
         progressBar.current.style.setProperty(
           "--seek-before-width",
-          `${(audio.currentTime / seconds) * 100}%`
+          `${(currentAudio.currentTime / seconds) * 100}%`
         );
       });
 
@@ -58,7 +55,7 @@ const Player = () => {
 
   useEffect(() => {
     if (audioPlayer.current) {
-      if (audio.isPlaying) {
+      if (currentAudio.isPlaying) {
         audioPlayer.current.play();
         animationRef.current = requestAnimationFrame(whilePlaying);
       } else {
@@ -66,19 +63,20 @@ const Player = () => {
         cancelAnimationFrame(animationRef.current);
       }
     }
-  }, [audio?.isPlaying]);
+  }, [currentAudio?.isPlaying]);
 
   const handlerNext = () => {
-    navigate(`/video/${audio.videosRelated[0].id}`);
+    navigate(`/video/${currentAudio.videosRelated[0].id}`);
   };
 
   const togglePlayPause = () => {
-    const prevValue = audio.isPlaying;
-    dispatch(onPlaying({ isPlaying: !prevValue }));
+    console.log("toggle");
+    const prevValue = currentAudio.isPlaying;
     localStorage.setItem(
-      "audio",
-      JSON.stringify({ ...audio, isPlaying: !prevValue })
+      "currentAudio",
+      JSON.stringify({ ...currentAudio, isPlaying: !prevValue })
     );
+    dispatch(onPlaying({ isPlaying: !prevValue }));
   };
 
   const whilePlaying = () => {
@@ -99,42 +97,47 @@ const Player = () => {
   const changePlayerCurrentTime = () => {
     progressBar.current.style.setProperty(
       "--seek-before-width",
-      `${(progressBar.current.value / audio.duration) * 100}%`
+      `${(progressBar.current.value / currentAudio.duration) * 100}%`
     );
     dispatch(onCurrentTime({ currentTime: progressBar.current.value }));
     localStorage.setItem(
-      "audio",
-      JSON.stringify({ ...audio, currentTime: progressBar.current.value })
+      "currentAudio",
+      JSON.stringify({
+        ...currentAudio,
+        currentTime: progressBar.current.value,
+      })
     );
   };
 
   return (
     <>
-      <audio ref={audioPlayer} src={audio.url} preload="auto" />
+      <audio ref={audioPlayer} src={currentAudio.url} preload="auto" />
       <input
         type="range"
         className=" absolute bottom-10 w-full cursor-pointer z-30"
         ref={progressBar}
         onChange={changeRange}
       />
-      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-11 bg-black opacity-10"></div>
+      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-11 bg-black opacity-10  z-30"></div>
       <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-10 z-30">
         <button>
           <PrevIcon />
         </button>
         <button onClick={togglePlayPause}>
-          {audio.isPlaying ? <PauseIcon /> : <PlayIcon />}
+          {currentAudio.isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
         <button onClick={handlerNext}>
           <NextIcon />
         </button>
         <div className="flex gap-2">
           <span className="currentTime">
-            {calculateTime(audio.currentTime)}
+            {calculateTime(currentAudio.currentTime)}
           </span>
           <span>/</span>
-          {audio.duration && (
-            <span className="duration">{calculateTime(audio.duration)}</span>
+          {currentAudio.duration && (
+            <span className="duration">
+              {calculateTime(currentAudio.duration)}
+            </span>
           )}
         </div>
       </div>

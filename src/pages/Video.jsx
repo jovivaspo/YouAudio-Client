@@ -1,45 +1,38 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Globalcontext } from "../contexts/GlobalContext";
-import api from "../api/api";
 import Loader from "../components/Loader";
-import VideosRelated from "../components/VideosRelated";
+import SideBar from "../components/SideBar";
 import MainVideo from "../components/Video";
 import { usePlayer } from "../hooks/usePlayer";
 
 const Video = () => {
   const { id } = useParams();
   const { loading } = useContext(Globalcontext);
-  const { loadInfo, loadAudio, resetAudio, audio } = usePlayer();
+  const { resetAudio, loadInfo, loadAudio, currentAudio, status } = usePlayer();
 
   useEffect(() => {
-    if (audio.id && id !== audio.id) {
-      console.log("1");
-      resetAudio({ id: audio.id });
-    }
+    if (currentAudio && id !== currentAudio.id) resetAudio({ id });
   }, [id]);
 
   useEffect(() => {
-    if (!audio.id) {
-      console.log("2");
-      loadInfo({ id });
-    }
-  }, [audio.id]);
+    if (status === null) loadInfo({ id });
+  }, [id, status]);
 
   useEffect(() => {
-    if (audio.info && audio.videosRelated.length >= 0) {
-      console.log("3");
-      loadAudio({ id });
-    }
-  }, [audio.info, audio.videosRelated]);
+    if (status === "new-item-selected") loadAudio({ id });
+  }, [status]);
 
   if (loading) return <Loader />;
 
   return (
     <div className="w-full flex flex-col xl:flex-row xl:h-screen ">
-      {audio.info && <MainVideo infoVideo={audio.info} />}
-      {audio.videosRelated && (
-        <VideosRelated videosRelated={audio.videosRelated} />
+      {currentAudio.info && <MainVideo infoVideo={currentAudio.info} />}
+      {currentAudio.videosRelated && (
+        <SideBar
+          items={currentAudio.videosRelated}
+          title={"Videos Relacionados"}
+        />
       )}
     </div>
   );

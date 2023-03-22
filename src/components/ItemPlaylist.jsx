@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { onInit } from "../store/playlist/playlistSlice";
 import PlaylistIcon from "./icons/PlaylistIcon";
 
 const ItemPlaylist = ({ playlist }) => {
@@ -21,22 +20,6 @@ const ItemPlaylist = ({ playlist }) => {
     if (ref.current.contains(e.target) || refImg.current.contains(e.target)) {
       ref.current.style.width = "33.33%";
     }
-  };
-
-  const handlerClick = () => {
-    distpatch(
-      onInit({ items: playlist.items, title: playlist.title, id: playlist.id })
-    );
-    localStorage.setItem(
-      "playlist",
-      JSON.stringify({
-        items: playlist.items,
-        title: playlist.title,
-        id: playlist.id,
-        currentAudio: playlist.items[0],
-      })
-    );
-    navigate(`/playlist/${playlist.id}`);
   };
 
   return (

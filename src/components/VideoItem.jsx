@@ -1,10 +1,14 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { usePlayer } from "../hooks/usePlayer";
 
 const VideoItem = ({ video }) => {
+  const id = video.id.videoId || video.id;
+
   return (
     <div className="flex flex-col justify-center items-center max-w-xs min-w-min">
-      <Link to={`/video/${video.id.videoId || video.id}`}>
+      <Link to={`/video/${id}`}>
         <img
           src={
             video.snippet?.thumbnails.medium.url ||
@@ -17,7 +21,7 @@ const VideoItem = ({ video }) => {
         />
       </Link>
       <div className="flex flex-col justify-start w-full my-2">
-        <Link to={`/video/${video.id.videoId || video.id}`}>
+        <Link to={`/video/${id}`}>
           <p className="text-white">
             <strong>{video.snippet?.title || video.title}</strong>
           </p>

@@ -10,17 +10,18 @@ import PlayIcon from "./icons/PlayIcon";
 import { useRef } from "react";
 
 const MainVideo = ({ infoVideo }) => {
-  const { status, audio } = usePlayer();
+  const { status, currentAudio } = usePlayer();
   const dispatch = useDispatch();
 
   const ref = useRef();
 
   const handlerClick = () => {
-    dispatch(onPlaying({ isPlaying: !audio.isPlaying }));
     localStorage.setItem(
-      "audio",
-      JSON.stringify({ ...audio, isPlaying: !audio.isPlaying })
+      "currentAudio",
+      JSON.stringify({ ...currentAudio, isPlaying: !currentAudio.isPlaying })
     );
+    dispatch(onPlaying({ isPlaying: !currentAudio.isPlaying }));
+
     if (ref.current) {
       ref.current.style.opacity = "30%";
       const timeVisibility = setTimeout(() => {
@@ -50,7 +51,7 @@ const MainVideo = ({ infoVideo }) => {
             className="w-28 h-28 rounded-full bg-black flex justify-center items-center ease-out duration-500 opacity-0"
             ref={ref}
           >
-            {audio?.isPlaying ? (
+            {currentAudio?.isPlaying ? (
               <PlayIcon width={50} height={50} />
             ) : (
               <PauseIcon width={50} height={50} />
@@ -62,7 +63,7 @@ const MainVideo = ({ infoVideo }) => {
           alt={infoVideo.title}
           className="w-full"
         />
-        {status === "ready" && <Player />}
+        {status === "ready" && <Player currentAudio={currentAudio} />}
       </div>
       <h3 className="text-lg sm:text-xl lg:text-2xl">{infoVideo.title}</h3>
       <p className="flex gap-2 text-gray-400">

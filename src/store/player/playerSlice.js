@@ -7,7 +7,6 @@ const initialState = {
   currentTime: 0,
   duration: 0,
   info: null,
-  videosRelated: [],
 };
 
 export const playerSlice = createSlice({
@@ -16,50 +15,74 @@ export const playerSlice = createSlice({
     status: localStorage.getItem("status-audio")
       ? localStorage.getItem("status-audio")
       : null,
-    audio: localStorage.getItem("audio")
-      ? JSON.parse(localStorage.getItem("audio"))
+    currentAudio: localStorage.getItem("currentAudio")
+      ? JSON.parse(localStorage.getItem("currentAudio"))
       : initialState,
+    playlist: {
+      title: "",
+      items: [],
+    },
   },
   reducers: {
+    onLoadAudio: (state, { payload }) => {
+      state.currentAudio = {
+        ...state.currentAudio,
+        url: payload.url,
+      };
+      state.status = "ready";
+    },
     onLoadInfo: (state, { payload }) => {
-      state.audio = {
-        ...state.audio,
+      state.currentAudio = {
+        ...state.currentAudio,
+        id: payload.id,
         info: payload.info,
         videosRelated: payload.videosRelated,
+      };
+      state.status = "new-item-selected";
+    },
+    onPlaylist: (state, { payload }) => {
+      state.playlist = {
+        title: payload.playlist.title,
+        items: payload.playlist.items,
       };
     },
     onConverter: (state) => {
       state.status = "converting";
     },
-    onReady: (state, { payload }) => {
-      state.status = "ready";
-      state.audio = {
-        ...state.audio,
-        url: payload.url,
-        id: payload.id,
-        isPlaying: false,
+    onPlaying: (state, { payload }) => {
+      state.currentAudio = {
+        ...state.currentAudio,
+        isPlaying: payload.isPlaying,
       };
     },
-    onPlaying: (state, { payload }) => {
-      state.audio = { ...state.audio, isPlaying: payload.isPlaying };
-    },
     onCurrentTime: (state, { payload }) => {
-      state.audio = { ...state.audio, currentTime: payload.currentTime };
+      state.currentAudio = {
+        ...state.currentAudio,
+        currentTime: payload.currentTime,
+      };
     },
     onDuration: (state, { payload }) => {
-      state.audio = { ...state.audio, duration: payload.duration };
+      state.currentAudio = {
+        ...state.currentAudio,
+        duration: payload.duration,
+      };
     },
     onReset: (state) => {
       state.status = null;
-      state.audio = initialState;
+      state.currentAudio = initialState;
+      state.playlist = {
+        title: "",
+        items: [],
+      };
     },
   },
 });
 
 export const {
+  onLoadAudio,
   onLoadInfo,
+  onPlaylist,
   onConverter,
-  onReady,
   onPlaying,
   onCurrentTime,
   onDuration,
