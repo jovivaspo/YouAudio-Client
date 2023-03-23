@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { openDB } from "idb";
 import api from "../api/api";
 import {
   onConverter,
@@ -9,12 +8,12 @@ import {
 } from "../store/player/playerSlice";
 import { useContext } from "react";
 import { Globalcontext } from "../contexts/GlobalContext";
-
-const database = {
-  dbName: "YouAudioDB",
-  dbVersion: 1,
-  storeName: "myAudioStore",
-};
+import {
+  deleteFile,
+  getAllFiles,
+  getFile,
+  updateDataBase,
+} from "../helpers/indexDB";
 
 export const usePlayer = () => {
   const { status, currentAudio } = useSelector((state) => state.player);
@@ -26,13 +25,6 @@ export const usePlayer = () => {
       dispatch(onConverter());
       localStorage.setItem("status-audio", "converting");
 
-      // abrir la base de datos
-      const db = await openDB(database.dbName, database.dbVersion, {
-        upgrade(db) {
-          db.createObjectStore(database.storeName);
-        },
-      });
-
       //LLamada a la api
       const response = await api.get(`/video/${id}`, {
         responseType: "blob",
@@ -40,7 +32,7 @@ export const usePlayer = () => {
       const blob = await response.data;
 
       // almacenar el archivo en IndexedDB
-      await db.put(database.storeName, blob, id);
+      await updateDataBase(blob, id);
 
       const file = blob;
 
@@ -53,7 +45,16 @@ export const usePlayer = () => {
       );
       localStorage.setItem("status-audio", "ready");
 
-      //Borramos el archivo anterior
+      //Borramos cualquier archivo que no sea el currentAudio
+      const keys = await getAllFiles();
+
+      const filesToDelete = keys.filter((key) => id !== key);
+
+      if (filesToDelete.length > 0) {
+        await Promise.all(
+          filesToDelete.map(async (el) => await deleteFile(el))
+        );
+      }
     } catch (error) {
       console.log(error);
       setAlert("Lo sentimos, algo salió mal...");
@@ -61,17 +62,10 @@ export const usePlayer = () => {
   };
 
   const resetAudio = async ({ id }) => {
-    // abrir la base de datos
     try {
-      const db = await openDB(database.dbName, database.dbVersion, {
-        upgrade(db) {
-          db.createObjectStore(database.storeName);
-        },
-      });
-      //Buscar el archivo
-      let file = await db.get(database.storeName, id);
+      const file = await getFile(id);
       if (file) {
-        await db.delete(database.storeName, id);
+        await deleteFile(id);
       }
       dispatch(onReset());
       localStorage.removeItem("currentAudio");
