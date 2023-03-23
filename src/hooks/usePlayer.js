@@ -43,6 +43,7 @@ export const usePlayer = () => {
         "currentAudio",
         JSON.stringify({ ...currentAudio, url })
       );
+
       localStorage.setItem("status-audio", "ready");
 
       //Borramos cualquier archivo que no sea el currentAudio

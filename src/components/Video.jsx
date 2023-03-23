@@ -16,11 +16,12 @@ const MainVideo = ({ infoVideo }) => {
   const ref = useRef();
 
   const handlerClick = () => {
+    const prevValue = currentAudio.isPlaying;
+    dispatch(onPlaying({ isPlaying: !prevValue }));
     localStorage.setItem(
       "currentAudio",
-      JSON.stringify({ ...currentAudio, isPlaying: !currentAudio.isPlaying })
+      JSON.stringify({ ...currentAudio, isPlaying: !prevValue })
     );
-    dispatch(onPlaying({ isPlaying: !currentAudio.isPlaying }));
 
     if (ref.current) {
       ref.current.style.opacity = "30%";

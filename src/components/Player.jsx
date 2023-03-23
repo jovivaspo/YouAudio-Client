@@ -23,12 +23,44 @@ const Player = ({ currentAudio }) => {
   const animationRef = useRef(); // reference the animation
 
   useEffect(() => {
+    const handlerStop = () => {
+      dispatch(onPlaying({ isPlaying: false }));
+      localStorage.setItem(
+        "currentAudio",
+        JSON.stringify({ ...currentAudio, isPlaying: false })
+      );
+    };
+    const handleBeforeUnload = () => {
+      if (audioPlayer.current) audioPlayer.current.pause();
+    };
+    handlerStop();
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      handlerStop();
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  useEffect(() => {
     const controlEnd = () => {
       dispatch(onPlaying({ isPlaying: false }));
       setTimeout(() => {
         handlerNext();
       }, [2500]);
     };
+
+    if (audioPlayer.current) {
+      audioPlayer.current.addEventListener("ended", controlEnd);
+
+      return () => {
+        if (audioPlayer.current) {
+          audioPlayer.current.removeEventListener("ended", controlEnd);
+        }
+      };
+    }
+  }, [audioPlayer.current]);
+
+  useEffect(() => {
     if (audioPlayer.current && progressBar.current) {
       audioPlayer.current.addEventListener("loadedmetadata", () => {
         const seconds = Math.floor(audioPlayer.current.duration);
@@ -48,20 +80,18 @@ const Player = ({ currentAudio }) => {
           `${(currentAudio.currentTime / seconds) * 100}%`
         );
       });
-
-      audioPlayer.current.addEventListener("ended", controlEnd);
     }
   }, []);
 
   useEffect(() => {
-    if (audioPlayer.current) {
-      if (currentAudio.isPlaying) {
-        audioPlayer.current.play();
-        animationRef.current = requestAnimationFrame(whilePlaying);
-      } else {
-        audioPlayer.current.pause();
-        cancelAnimationFrame(animationRef.current);
-      }
+    if (!audioPlayer.current) return;
+
+    if (currentAudio.isPlaying) {
+      audioPlayer.current.play();
+      animationRef.current = requestAnimationFrame(whilePlaying);
+    } else {
+      audioPlayer.current.pause();
+      cancelAnimationFrame(animationRef.current);
     }
   }, [currentAudio?.isPlaying]);
 
@@ -70,13 +100,12 @@ const Player = ({ currentAudio }) => {
   };
 
   const togglePlayPause = () => {
-    console.log("toggle");
     const prevValue = currentAudio.isPlaying;
+    dispatch(onPlaying({ isPlaying: !prevValue }));
     localStorage.setItem(
       "currentAudio",
       JSON.stringify({ ...currentAudio, isPlaying: !prevValue })
     );
-    dispatch(onPlaying({ isPlaying: !prevValue }));
   };
 
   const whilePlaying = () => {
@@ -111,7 +140,11 @@ const Player = ({ currentAudio }) => {
 
   return (
     <>
-      <audio ref={audioPlayer} src={currentAudio.url} preload="auto" />
+      {
+        <audio ref={audioPlayer} preload="auto">
+          <source src={currentAudio.url} type="audio/mpeg" />
+        </audio>
+      }
       <input
         type="range"
         className=" absolute bottom-10 w-full cursor-pointer z-30"
