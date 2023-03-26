@@ -10,18 +10,12 @@ import PlayIcon from "./icons/PlayIcon";
 import { useRef } from "react";
 
 const MainVideo = ({ infoVideo }) => {
-  const { status, currentAudio } = usePlayer();
-  const dispatch = useDispatch();
+  const { status, currentAudio, togglePlayPause } = usePlayer();
 
   const ref = useRef();
 
   const handlerClick = () => {
-    const prevValue = currentAudio.isPlaying;
-    dispatch(onPlaying({ isPlaying: !prevValue }));
-    localStorage.setItem(
-      "currentAudio",
-      JSON.stringify({ ...currentAudio, isPlaying: !prevValue })
-    );
+    togglePlayPause();
 
     if (ref.current) {
       ref.current.style.opacity = "30%";
@@ -34,8 +28,8 @@ const MainVideo = ({ infoVideo }) => {
 
   return (
     <div className="w-full flex flex-col gap-2 xl:p-4 text-white ">
-      <div className="relative ">
-        {status === "converting" && (
+      <div className="relative w-full">
+        {status !== "ready" && (
           <div className="h-full w-full absolute top-0 left-0 bg-black opacity-60 flex justify-center items-center ">
             <img
               src={converter}
@@ -64,7 +58,7 @@ const MainVideo = ({ infoVideo }) => {
           alt={infoVideo.title}
           className="w-full"
         />
-        {status === "ready" && <Player currentAudio={currentAudio} />}
+        <Player />
       </div>
       <h3 className="text-lg sm:text-xl lg:text-2xl">{infoVideo.title}</h3>
       <p className="flex gap-2 text-gray-400">
@@ -73,15 +67,15 @@ const MainVideo = ({ infoVideo }) => {
       </p>
       <div className="flex gap-2 items-center">
         <img
-          src={infoVideo.channelImg.url}
-          alt={infoVideo.channel}
+          src={infoVideo?.channelImg?.url}
+          alt={infoVideo?.channel}
           className="rounded-full"
         />
         <Link
-          to={`/channel/${infoVideo.channelId}`}
+          to={`/channel/${infoVideo?.channelId}`}
           className="hover:text-blue-600"
         >
-          {infoVideo.channel}
+          {infoVideo?.channel}
         </Link>
       </div>
     </div>

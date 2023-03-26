@@ -6,6 +6,7 @@ const initialState = {
   isPlaying: false,
   currentTime: 0,
   duration: 0,
+  seek: 0,
   info: null,
 };
 
@@ -31,6 +32,9 @@ export const playerSlice = createSlice({
       };
       state.status = "ready";
     },
+    onLoading: (state) => {
+      state.status = "loading-audio";
+    },
     onLoadInfo: (state, { payload }) => {
       state.currentAudio = {
         ...state.currentAudio,
@@ -48,6 +52,12 @@ export const playerSlice = createSlice({
     },
     onConverter: (state) => {
       state.status = "converting";
+    },
+    onSaving: (state) => {
+      state.status = "saving";
+    },
+    onSaved: (state) => {
+      state.status = "saved";
     },
     onPlaying: (state, { payload }) => {
       state.currentAudio = {
@@ -67,6 +77,12 @@ export const playerSlice = createSlice({
         duration: payload.duration,
       };
     },
+    onSeek: (state, { payload }) => {
+      state.currentAudio = {
+        ...state.currentAudio,
+        seek: payload.seek,
+      };
+    },
     onReset: (state) => {
       state.status = null;
       state.currentAudio = initialState;
@@ -75,16 +91,29 @@ export const playerSlice = createSlice({
         items: [],
       };
     },
+    onResetUrl: (state) => {
+      state.status = "new-url";
+      state.currentAudio = {
+        ...state.currentAudio,
+        url: null,
+        isPlaying: false,
+      };
+    },
   },
 });
 
 export const {
   onLoadAudio,
   onLoadInfo,
+  onLoading,
   onPlaylist,
   onConverter,
+  onSaving,
+  onSaved,
   onPlaying,
   onCurrentTime,
   onDuration,
+  onSeek,
   onReset,
+  onResetUrl,
 } = playerSlice.actions;

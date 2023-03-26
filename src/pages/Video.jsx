@@ -5,23 +5,27 @@ import Loader from "../components/Loader";
 import SideBar from "../components/SideBar";
 import MainVideo from "../components/Video";
 import { usePlayer } from "../hooks/usePlayer";
+import { useDispatch } from "react-redux";
 
 const Video = () => {
   const { id } = useParams();
   const { loading } = useContext(Globalcontext);
-  const { resetAudio, loadInfo, loadAudio, currentAudio, status } = usePlayer();
+  const { currentAudio, status, loadInfo, resetAudio, resetUrl } = usePlayer();
 
   useEffect(() => {
-    if (currentAudio && id !== currentAudio.id) resetAudio({ id });
+    if (window.performance && id === currentAudio.id) {
+      if (performance.navigation.type !== 1) return;
+      resetUrl();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentAudio.id && id !== currentAudio.id) resetAudio({ id });
   }, [id]);
 
   useEffect(() => {
     if (status === null) loadInfo({ id });
   }, [id, status]);
-
-  useEffect(() => {
-    if (status === "new-item-selected") loadAudio({ id });
-  }, [status]);
 
   if (loading) return <Loader />;
 

@@ -1,181 +1,44 @@
-import NextIcon from "./icons/NextIcon";
-import PauseIcon from "./icons/PauseIcon";
-import PlayIcon from "./icons/PlayIcon";
-import PrevIcon from "./icons/PrevIcon";
-import { useEffect, useRef } from "react";
-import { calculateTime } from "../helpers/calculateTime";
-import { useDispatch } from "react-redux";
-import {
-  onCurrentTime,
-  onDuration,
-  onPlaying,
-} from "../store/player/playerSlice";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { usePlayer } from "../hooks/usePlayer";
+import ControlPlayer from "./ControlPlayer";
+import ProgressBar from "./ProgressBar";
+import TimeLinePlayer from "./TimeLinePlayer";
+import Audio from "./audio";
 
-const Player = ({ currentAudio }) => {
-  const dispatch = useDispatch();
-
-  const navigate = useNavigate();
-
-  // references
-  const audioPlayer = useRef(); // reference our audio component
-  const progressBar = useRef(); // reference our progress bar
-  const animationRef = useRef(); // reference the animation
+const Player = () => {
+  const { currentAudio, status, togglePlayPause, savingAudio } = usePlayer();
 
   useEffect(() => {
-    const handlerStop = () => {
-      dispatch(onPlaying({ isPlaying: false }));
-      localStorage.setItem(
-        "currentAudio",
-        JSON.stringify({ ...currentAudio, isPlaying: false })
-      );
-    };
-    const handleBeforeUnload = () => {
-      if (audioPlayer.current) audioPlayer.current.pause();
-    };
-    handlerStop();
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      handlerStop();
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+    if (status !== "new-item-selected") return;
+    savingAudio({ id: currentAudio.id });
+  }, [status]);
 
-  useEffect(() => {
-    const controlEnd = () => {
-      dispatch(onPlaying({ isPlaying: false }));
-      setTimeout(() => {
-        handlerNext();
-      }, [2500]);
-    };
-
-    if (audioPlayer.current) {
-      audioPlayer.current.addEventListener("ended", controlEnd);
-
-      return () => {
-        if (audioPlayer.current) {
-          audioPlayer.current.removeEventListener("ended", controlEnd);
-        }
-      };
-    }
-  }, [audioPlayer.current]);
-
-  useEffect(() => {
-    if (audioPlayer.current && progressBar.current) {
-      audioPlayer.current.addEventListener("loadedmetadata", () => {
-        const seconds = Math.floor(audioPlayer.current.duration);
-
-        dispatch(onDuration({ duration: seconds }));
-        localStorage.setItem(
-          "currentAudio",
-          JSON.stringify({ ...currentAudio, duration: seconds })
-        );
-        progressBar.current.max = seconds || 0;
-
-        audioPlayer.current.currentTime = currentAudio.currentTime;
-        progressBar.current.value = audioPlayer.current.currentTime;
-
-        progressBar.current.style.setProperty(
-          "--seek-before-width",
-          `${(currentAudio.currentTime / seconds) * 100}%`
-        );
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!audioPlayer.current) return;
-
-    if (currentAudio.isPlaying) {
-      audioPlayer.current.play();
-      animationRef.current = requestAnimationFrame(whilePlaying);
-    } else {
-      audioPlayer.current.pause();
-      cancelAnimationFrame(animationRef.current);
-    }
-  }, [currentAudio?.isPlaying]);
-
-  const handlerNext = () => {
-    navigate(`/video/${currentAudio.videosRelated[0].id}`);
-  };
-
-  const togglePlayPause = () => {
-    const prevValue = currentAudio.isPlaying;
-    dispatch(onPlaying({ isPlaying: !prevValue }));
-    localStorage.setItem(
-      "currentAudio",
-      JSON.stringify({ ...currentAudio, isPlaying: !prevValue })
-    );
-  };
-
-  const whilePlaying = () => {
-    if (progressBar.current && audioPlayer.current) {
-      progressBar.current.value = audioPlayer.current.currentTime;
-      changePlayerCurrentTime();
-      animationRef.current = requestAnimationFrame(whilePlaying);
-    }
-  };
-
-  const changeRange = () => {
-    if (audioPlayer.current) {
-      audioPlayer.current.currentTime = progressBar.current.value;
-      changePlayerCurrentTime();
-    }
-  };
-
-  const changePlayerCurrentTime = () => {
-    progressBar.current.style.setProperty(
-      "--seek-before-width",
-      `${(progressBar.current.value / currentAudio.duration) * 100}%`
-    );
-    dispatch(onCurrentTime({ currentTime: progressBar.current.value }));
-    localStorage.setItem(
-      "currentAudio",
-      JSON.stringify({
-        ...currentAudio,
-        currentTime: progressBar.current.value,
-      })
-    );
-  };
+  if (status !== "saved" && status !== "ready" && status !== "new-url")
+    return <></>;
 
   return (
     <>
-      {
-        <audio ref={audioPlayer} preload="auto">
-          <source src={currentAudio.url} type="audio/mpeg" />
-        </audio>
-      }
-      <input
-        type="range"
-        className=" absolute bottom-10 w-full cursor-pointer z-30"
-        ref={progressBar}
-        onChange={changeRange}
-      />
+      <Audio />
+      <ProgressBar currentAudio={currentAudio} />
       <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-11 bg-black opacity-10  z-30"></div>
-      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-10 z-30">
-        <button>
-          <PrevIcon />
-        </button>
-        <button onClick={togglePlayPause}>
-          {currentAudio.isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </button>
-        <button onClick={handlerNext}>
-          <NextIcon />
-        </button>
-        <div className="flex gap-2">
-          <span className="currentTime">
-            {calculateTime(currentAudio.currentTime)}
-          </span>
-          <span>/</span>
-          {currentAudio.duration && (
-            <span className="duration">
-              {calculateTime(currentAudio.duration)}
-            </span>
-          )}
-        </div>
-      </div>
+      <ControlPlayer
+        togglePlayPause={togglePlayPause}
+        currentAudio={currentAudio}
+      />
+      <TimeLinePlayer currentAudio={currentAudio} />
     </>
   );
 };
 
 export default Player;
+
+/* <ProgressBar currentAudio={currentAudio} />
+      <ControlPlayer
+        togglePlayPause={togglePlayPause}
+        currentAudio={currentAudio}
+      />
+ <ControlPlayer
+        togglePlayPause={togglePlayPause}
+        currentAudio={currentAudio}
+      />
+      <TimeLinePlayer currentAudio={currentAudio} />*/

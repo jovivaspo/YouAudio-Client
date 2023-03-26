@@ -33,7 +33,8 @@ export const getFile = async (id) => {
 export const updateDataBase = async (file, id) => {
   try {
     const db = await openDataBase();
-    await db.put(database.storeName, file, id);
+    const fileSaved = await db.put(database.storeName, file, id);
+    return fileSaved;
   } catch (error) {
     console.log(error);
     return { error: "Error al tomar el archivo" };
