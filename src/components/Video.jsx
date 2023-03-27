@@ -39,7 +39,7 @@ const MainVideo = ({ infoVideo }) => {
           </div>
         )}
         <div
-          className="absolute z-20 w-full h-full flex justify-center items-center"
+          className="absolute z-20 w-full h-full flex justify-center items-center border-2 border-gray-500"
           onClick={handlerClick}
         >
           <div

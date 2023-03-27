@@ -20,14 +20,14 @@ const Player = () => {
     <>
       <Audio />
       <ProgressBar currentAudio={currentAudio} />
-      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-11 bg-black opacity-10  z-30"></div>
+      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-11 bg-black opacity-50  z-30"></div>
       <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-44 h-10 z-30">
         <ControlPlayer
           togglePlayPause={togglePlayPause}
           currentAudio={currentAudio}
         />
       </div>
-      <div className="absolute bottom-0 left-44 h-10 flex items-center gap-2">
+      <div className="absolute bottom-0 left-40 h-10 flex items-center gap-1 z-30 sm:left-44">
         <TimeLinePlayer currentAudio={currentAudio} />
       </div>
     </>
@@ -35,14 +35,3 @@ const Player = () => {
 };
 
 export default Player;
-
-/* <ProgressBar currentAudio={currentAudio} />
-      <ControlPlayer
-        togglePlayPause={togglePlayPause}
-        currentAudio={currentAudio}
-      />
- <ControlPlayer
-        togglePlayPause={togglePlayPause}
-        currentAudio={currentAudio}
-      />
-      <TimeLinePlayer currentAudio={currentAudio} />*/

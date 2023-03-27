@@ -4,12 +4,14 @@ import { calculateTime } from "../helpers/calculateTime";
 const TimeLinePlayer = ({ currentAudio }) => {
   return (
     <>
-      <span className="currentTime">
+      <span className="currentTime text-sm sm:text-base">
         {calculateTime(currentAudio.currentTime)}
       </span>
       <span>/</span>
       {currentAudio.duration && (
-        <span className="duration">{calculateTime(currentAudio.duration)}</span>
+        <span className="duration text-sm sm:text-base">
+          {calculateTime(currentAudio.duration)}
+        </span>
       )}
     </>
   );

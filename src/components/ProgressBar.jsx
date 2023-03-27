@@ -41,7 +41,7 @@ const ProgressBar = ({ currentAudio }) => {
   return (
     <input
       type="range"
-      className=" absolute bottom-10 w-full cursor-pointer z-30"
+      className=" absolute bottom-10 w-full cursor-pointer z-40"
       ref={progressBar}
       onChange={changeRange}
     />
