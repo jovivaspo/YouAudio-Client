@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
           {children}
         </Content>
       </div>
-
+      <MinPlayer />
       <Alert />
     </div>
   );
