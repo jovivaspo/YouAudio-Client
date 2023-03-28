@@ -1,14 +1,21 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { usePlayer } from "../hooks/usePlayer";
 
-const VideoItem = ({ video }) => {
-  const id = video.id.videoId || video.id;
+const ItemSidebarPlaylist = ({ video, playlist }) => {
+  const { currentAudio } = usePlayer();
+
+  const id = playlist.id;
+  const idVideo = video.id;
 
   return (
-    <div className="flex flex-col justify-center items-center max-w-xs min-w-min">
-      <Link to={`/video/${id}`}>
+    <div
+      className="flex gap-2 justify-center items-center max-w-xs min-w-min p-2"
+      style={{
+        backgroundColor: currentAudio.id === idVideo ? "red" : "transparent",
+      }}
+    >
+      <Link to={`/playlist/${id}/${idVideo}`}>
         <img
           src={
             video.snippet?.thumbnails.medium.url ||
@@ -22,12 +29,12 @@ const VideoItem = ({ video }) => {
         />
       </Link>
       <div className="flex flex-col justify-start w-full my-2">
-        <Link to={`/video/${id}`}>
-          <p className="text-white">
+        <Link to={`/playlist/${id}/${idVideo}`}>
+          <p className="text-white text-sm">
             <strong>{video.snippet?.title || video.title}</strong>
           </p>
         </Link>
-        <span className="text-gray-500 hover:text-blue-600">
+        <span className="text-gray-500 hover:text-blue-600 text-xs">
           <Link
             to={`/channel/${
               video.snippet?.channelId ||
@@ -46,4 +53,4 @@ const VideoItem = ({ video }) => {
   );
 };
 
-export default VideoItem;
+export default ItemSidebarPlaylist;

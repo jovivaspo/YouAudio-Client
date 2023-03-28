@@ -3,14 +3,13 @@ import { getDate } from "../helpers/getDate";
 import Player from "../components/Player";
 import { usePlayer } from "../hooks/usePlayer";
 import converter from "../assets/converter.svg";
-import { useDispatch } from "react-redux";
-import { onPlaying } from "../store/player/playerSlice";
 import PauseIcon from "./icons/PauseIcon";
 import PlayIcon from "./icons/PlayIcon";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const MainVideo = ({ infoVideo }) => {
   const { status, currentAudio, togglePlayPause } = usePlayer();
+  const [imageLaod, setImageLoad] = useState(false);
 
   const ref = useRef();
 
@@ -26,10 +25,14 @@ const MainVideo = ({ infoVideo }) => {
     }
   };
 
+  const handlerLoadImage = () => {
+    setImageLoad(true);
+  };
+
   return (
     <div className="w-full flex flex-col gap-2 xl:p-4 text-white ">
       <div className="relative w-full">
-        {status !== "ready" && (
+        {status !== "ready" && imageLaod && (
           <div className="h-full w-full absolute top-0 left-0 bg-black opacity-60 flex justify-center items-center ">
             <img
               src={converter}
@@ -57,6 +60,8 @@ const MainVideo = ({ infoVideo }) => {
           src={infoVideo.thumbnails[infoVideo.thumbnails.length - 1].url}
           alt={infoVideo.title}
           className="w-full"
+          loading="lazy"
+          onLoad={handlerLoadImage}
         />
         <Player />
       </div>

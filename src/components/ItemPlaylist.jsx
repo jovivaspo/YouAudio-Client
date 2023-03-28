@@ -24,18 +24,30 @@ const ItemPlaylist = ({ playlist }) => {
   };
 
   const handlerClick = () => {
+    distpatch(
+      onPlaylist({
+        title: playlist.title,
+        items: playlist.items,
+        id: playlist.id,
+      })
+    );
+    localStorage.setItem(
+      "playlist",
+      JSON.stringify({
+        title: playlist.title,
+        items: playlist.items,
+        id: playlist.id,
+      })
+    );
 
-    distpatch(onPlaylist({title:playlist.title, items: playlist.items, id: playlist.id}))
-    localStorage.setItem("playlist",JSON.stringify({title:playlist.title, items: playlist.items, id: playlist.id}))
-
-    navigate(`/playlist/${playlist.id}/${playlist.items[0].id}`)
-  }
+    navigate(`/playlist/${playlist.id}/${playlist.items[0].id}`);
+  };
 
   return (
     <div className="flex flex-col justify-center items-center max-w-xs min-w-min">
       <div
         onClick={handlerClick}
-        className="relative"
+        className="relative cursor-pointer"
         onMouseOver={handlerOver}
         onMouseOut={handlerOut}
       >
