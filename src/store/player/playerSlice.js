@@ -8,13 +8,14 @@ const initialStateCurrentAudio = {
   duration: 0,
   seek: 0,
   info: null,
+  next: null,
 };
 
-const initialStatePlaylist =  {
-  id:null,
+const initialStatePlaylist = {
+  id: null,
   title: "",
   items: [],
-}
+};
 
 export const playerSlice = createSlice({
   name: "player",
@@ -25,9 +26,9 @@ export const playerSlice = createSlice({
     currentAudio: localStorage.getItem("currentAudio")
       ? JSON.parse(localStorage.getItem("currentAudio"))
       : initialStateCurrentAudio,
-    playlist:localStorage.getItem("playlist")
-    ? JSON.parse(localStorage.getItem("playlist"))
-    : initialStatePlaylist
+    playlist: localStorage.getItem("playlist")
+      ? JSON.parse(localStorage.getItem("playlist"))
+      : initialStatePlaylist,
   },
   reducers: {
     onLoadAudio: (state, { payload }) => {
@@ -92,7 +93,6 @@ export const playerSlice = createSlice({
     onReset: (state) => {
       state.status = null;
       state.currentAudio = initialStateCurrentAudio;
-     
     },
     onResetUrl: (state) => {
       state.status = "new-url";
@@ -101,6 +101,10 @@ export const playerSlice = createSlice({
         url: null,
         isPlaying: false,
       };
+    },
+    onChangeAudio: (state, { payload }) => {
+      state.status = "change-audio";
+      state.currentAudio = { ...initialStateCurrentAudio, next: payload.id };
     },
   },
 });
@@ -119,4 +123,5 @@ export const {
   onSeek,
   onReset,
   onResetUrl,
+  onChangeAudio,
 } = playerSlice.actions;

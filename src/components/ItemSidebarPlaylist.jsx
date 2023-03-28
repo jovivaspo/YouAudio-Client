@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { usePlayer } from "../hooks/usePlayer";
+import PlayIcon from "./icons/PlayIcon";
 
 const ItemSidebarPlaylist = ({ video, playlist }) => {
   const { currentAudio } = usePlayer();
@@ -10,11 +11,13 @@ const ItemSidebarPlaylist = ({ video, playlist }) => {
 
   return (
     <div
-      className="flex gap-2 justify-center items-center max-w-xs min-w-min p-2"
+      className="flex gap-2 justify-center items-center max-w-xs min-w-min p-2 rounded-xl"
       style={{
-        backgroundColor: currentAudio.id === idVideo ? "red" : "transparent",
+        backgroundColor:
+          currentAudio.id === idVideo ? "#212121" : "transparent",
       }}
     >
+      {currentAudio.id === idVideo && <PlayIcon />}
       <Link to={`/playlist/${id}/${idVideo}`}>
         <img
           src={

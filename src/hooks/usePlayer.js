@@ -21,7 +21,9 @@ import {
 } from "../helpers/indexDB";
 
 export const usePlayer = () => {
-  const { status, currentAudio, playlist } = useSelector((state) => state.player);
+  const { status, currentAudio, playlist } = useSelector(
+    (state) => state.player
+  );
   const { setAlert, setLoading } = useContext(Globalcontext);
   const dispatch = useDispatch();
 
@@ -132,7 +134,6 @@ export const usePlayer = () => {
       localStorage.setItem("status-audio", "ready");
     } catch (error) {
       console.log(error);
-
       setAlert("Lo sentimos, algo salió mal");
     }
   };
@@ -158,7 +159,6 @@ export const usePlayer = () => {
     const prevValue = currentAudio.isPlaying;
     dispatch(onPlaying({ isPlaying: !prevValue }));
   };
-
 
   return {
     status,
