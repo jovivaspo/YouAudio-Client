@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+const initialStateCurrentAudio = {
   url: null,
   id: null,
   isPlaying: false,
@@ -10,6 +10,12 @@ const initialState = {
   info: null,
 };
 
+const initialStatePlaylist =  {
+  id:null,
+  title: "",
+  items: [],
+}
+
 export const playerSlice = createSlice({
   name: "player",
   initialState: {
@@ -18,11 +24,10 @@ export const playerSlice = createSlice({
       : null,
     currentAudio: localStorage.getItem("currentAudio")
       ? JSON.parse(localStorage.getItem("currentAudio"))
-      : initialState,
-    playlist: {
-      title: "",
-      items: [],
-    },
+      : initialStateCurrentAudio,
+    playlist:localStorage.getItem("playlist")
+    ? JSON.parse(localStorage.getItem("playlist"))
+    : initialStatePlaylist
   },
   reducers: {
     onLoadAudio: (state, { payload }) => {
@@ -46,8 +51,9 @@ export const playerSlice = createSlice({
     },
     onPlaylist: (state, { payload }) => {
       state.playlist = {
-        title: payload.playlist.title,
-        items: payload.playlist.items,
+        id: payload.id,
+        title: payload.title,
+        items: payload.items,
       };
     },
     onConverter: (state) => {
@@ -85,11 +91,8 @@ export const playerSlice = createSlice({
     },
     onReset: (state) => {
       state.status = null;
-      state.currentAudio = initialState;
-      state.playlist = {
-        title: "",
-        items: [],
-      };
+      state.currentAudio = initialStateCurrentAudio;
+     
     },
     onResetUrl: (state) => {
       state.status = "new-url";

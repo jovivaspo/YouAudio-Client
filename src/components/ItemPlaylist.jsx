@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { onPlaylist } from "../store/player/playerSlice";
 import PlaylistIcon from "./icons/PlaylistIcon";
 
 const ItemPlaylist = ({ playlist }) => {
@@ -21,6 +22,14 @@ const ItemPlaylist = ({ playlist }) => {
       ref.current.style.width = "33.33%";
     }
   };
+
+  const handlerClick = () => {
+
+    distpatch(onPlaylist({title:playlist.title, items: playlist.items, id: playlist.id}))
+    localStorage.setItem("playlist",JSON.stringify({title:playlist.title, items: playlist.items, id: playlist.id}))
+
+    navigate(`/playlist/${playlist.id}/${playlist.items[0].id}`)
+  }
 
   return (
     <div className="flex flex-col justify-center items-center max-w-xs min-w-min">

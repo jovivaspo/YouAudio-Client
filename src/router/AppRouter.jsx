@@ -14,7 +14,7 @@ const AppRouter = () => {
       <Route path="/search/:q" element={<Search />} />
       <Route path="/video/:id" element={<Video />} />
       <Route path="/channel/:id" element={<Channel />} />
-      <Route path="/playlist/:id" element={<Playlist />} />
+      <Route path="/playlist/:id/:idVideo" element={<Playlist />} />
     </Routes>
   );
 };

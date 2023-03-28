@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { usePlayer } from "../hooks/usePlayer";
 import Audio from "./audio";
+import CloseButton from "./CloseButton";
 import ControlPlayer from "./ControlPlayer";
 
 const MinPlayer = () => {
@@ -10,7 +11,7 @@ const MinPlayer = () => {
   const refMinPlayer = useRef();
   const refTitle = useRef();
 
-  const { currentAudio, status, togglePlayPause } = usePlayer();
+  const { currentAudio, status, playlist, togglePlayPause } = usePlayer();
 
   const location = useLocation();
 
@@ -20,9 +21,10 @@ const MinPlayer = () => {
   const title = currentAudio?.info?.title;
 
   useEffect(() => {
-    location.pathname.includes("/video/") ? setShow(false) : setShow(true);
+    location.pathname.includes("/video/") || location.pathname.includes("/playlist/") ? setShow(false) : setShow(true);
   }, [location.pathname]);
 
+  /*
   const widthContainerTitle = refTitle?.current?.getBoundingClientRect().width;
   const widthTitle = refTitle?.current?.innerText.length * 7;
   console.log(widthContainerTitle, widthTitle);
@@ -48,6 +50,7 @@ const MinPlayer = () => {
     if (animation >= widthTitle) return setDirection(-1);
     if (animation <= 0) return setDirection(0);
   }, [animation]);
+  */
 
   if (status !== "ready" || !show) return <></>;
 
@@ -56,8 +59,9 @@ const MinPlayer = () => {
       <div className="fixed bottom-1 right-1/2 w-11/12 translate-x-2/4 h-12 bg-black opacity-70 rounded-lg sm:hidden"></div>
       <div
         ref={refMinPlayer}
-        className="fixed bottom-0 right-1/2 w-11/12 translate-x-2/4 h-12 flex items-center gap-2text-white rounded-lg sm:h-[274px] sm:w-96 sm:bottom-2 sm:right-8 sm:translate-x-0 sm:flex-col sm:bg-black"
+        className="fixed bottom-0 right-1/2 w-11/12 translate-x-2/4 h-12 flex items-center gap-2text-white rounded-lg sm:h-[274px] sm:w-96 sm:bottom-2 sm:right-8 sm:translate-x-0 sm:flex-col sm:bg-black sm:border-gray-800 sm:border-2"
       >
+        <CloseButton/>
         <div className="flex w-2/3 gap-2 sm:w-full  sm:h-full sm:flex-col ">
           <Link
             to={`/video/${currentAudio.id}`}
@@ -68,7 +72,7 @@ const MinPlayer = () => {
           <div className="w-3/4 text-white flex flex-col justify-around px-2 overflow-hidden sm:w-full">
             <p
               className="text-xs whitespace-nowrap font-bold overflow-hidden"
-              style={{ transform: `translateX(-${animation}px)` }}
+             
               ref={refTitle}
             >
               {title}
@@ -83,6 +87,7 @@ const MinPlayer = () => {
               <ControlPlayer
                 togglePlayPause={togglePlayPause}
                 currentAudio={currentAudio}
+                playlist={playlist}
               />
             </div>
           </>

@@ -21,7 +21,7 @@ import {
 } from "../helpers/indexDB";
 
 export const usePlayer = () => {
-  const { status, currentAudio } = useSelector((state) => state.player);
+  const { status, currentAudio, playlist } = useSelector((state) => state.player);
   const { setAlert, setLoading } = useContext(Globalcontext);
   const dispatch = useDispatch();
 
@@ -159,9 +159,11 @@ export const usePlayer = () => {
     dispatch(onPlaying({ isPlaying: !prevValue }));
   };
 
+
   return {
     status,
     currentAudio,
+    playlist,
 
     savingAudio,
     loadAudio,

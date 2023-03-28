@@ -6,7 +6,7 @@ import TimeLinePlayer from "./TimeLinePlayer";
 import Audio from "./audio";
 
 const Player = () => {
-  const { currentAudio, status, togglePlayPause, savingAudio } = usePlayer();
+  const { currentAudio, status, playlist, togglePlayPause, savingAudio } = usePlayer();
 
   useEffect(() => {
     if (status !== "new-item-selected") return;
@@ -25,6 +25,7 @@ const Player = () => {
         <ControlPlayer
           togglePlayPause={togglePlayPause}
           currentAudio={currentAudio}
+          playlist={playlist}
         />
       </div>
       <div className="absolute bottom-0 left-40 h-10 flex items-center gap-1 z-30 sm:left-44">

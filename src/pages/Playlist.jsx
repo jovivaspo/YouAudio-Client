@@ -1,7 +1,42 @@
 import React, { useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import Loader from "../components/Loader";
+import {Globalcontext} from "../contexts/GlobalContext"
+import {usePlayer} from "../hooks/usePlayer"
+import MainVideo from "../components/Video";
+import SideBar from "../components/SideBar";
 
 const Playlist = () => {
-  return <div className="w-full flex flex-col xl:flex-row xl:h-screen "></div>;
+  const { loading } = useContext(Globalcontext);
+  const { currentAudio, status, playlist, loadInfo, resetAudio, resetUrl } = usePlayer();
+  const {idVideo} = useParams()
+
+  useEffect(() => {
+    if (window.performance && idVideo === currentAudio.id) {
+      if (performance.navigation.type !== 1) return;
+      resetUrl();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentAudio.id && idVideo !== currentAudio.id) resetAudio({ id: idVideo });
+  }, [idVideo]);
+
+  useEffect(() => {
+    if (status === null) loadInfo({ id: idVideo });
+  }, [idVideo, status]);
+
+  if (loading) return <Loader/>
+
+  return <div className="w-full flex flex-col xl:flex-row xl:h-screen ">
+    {currentAudio.info && <MainVideo infoVideo={currentAudio.info} />}
+      {currentAudio.videosRelated && (
+        <SideBar
+          items={playlist.items}
+          title={playlist.title}
+        />
+      )}
+  </div>;
 };
 
 export default Playlist;
