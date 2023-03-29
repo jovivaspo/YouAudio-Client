@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { usePlayer } from "../hooks/usePlayer";
-import {
-  onCurrentTime,
-  onDuration,
-  onSeek,
-  onPlaying,
-} from "../store/player/playerSlice";
+import { onCurrentTime, onDuration, onSeek } from "../store/player/playerSlice";
 
 const Audio = () => {
   const audioPlayer = useRef();
   const dispatch = useDispatch();
-  const { loadAudio, currentAudio, status } = usePlayer();
+  const { currentAudio, status, loadAudio, savingAudio } = usePlayer();
+
+  useEffect(() => {
+    if (status !== "new-item-selected") return;
+    savingAudio({ id: currentAudio.id });
+  }, [status]);
 
   useEffect(() => {
     if (status !== "saved" && status !== "new-url") return;

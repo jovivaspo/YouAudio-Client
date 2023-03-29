@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { usePlayer } from "../hooks/usePlayer";
-import Audio from "./audio";
 import CloseButton from "./CloseButton";
 import ControlPlayer from "./ControlPlayer";
 import converter from "../assets/converter.svg";
@@ -13,15 +12,8 @@ const MinPlayer = () => {
   const refMinPlayer = useRef();
   const refTitle = useRef();
 
-  const {
-    currentAudio,
-    status,
-    playlist,
-    loadInfo,
-    resetAudio,
-    togglePlayPause,
-  } = usePlayer();
-  const dispatch = useDispatch();
+  const { currentAudio, status, playlist, loadInfo, togglePlayPause } =
+    usePlayer();
 
   const location = useLocation();
 
@@ -39,7 +31,7 @@ const MinPlayer = () => {
 
   useEffect(() => {
     if (status !== "change-audio" || !currentAudio.next) return;
-    dispatch(loadInfo({ id: currentAudio.next }));
+    loadInfo({ id: currentAudio.next });
   }, [status]);
 
   if (!show || status === null) return <></>;
@@ -81,7 +73,6 @@ const MinPlayer = () => {
 
         {status === "ready" && (
           <>
-            <Audio />
             <div className="flex justify-around i gap-4 w-1/3 mr-2 sm:justify-between sm:mt-1 sm:pb-1">
               <ControlPlayer
                 togglePlayPause={togglePlayPause}

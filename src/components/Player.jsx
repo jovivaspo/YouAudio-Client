@@ -6,32 +6,28 @@ import TimeLinePlayer from "./TimeLinePlayer";
 import Audio from "./audio";
 
 const Player = () => {
-  const { currentAudio, status, playlist, togglePlayPause, savingAudio } = usePlayer();
+  const { currentAudio, status, playlist, togglePlayPause } = usePlayer();
 
-  useEffect(() => {
-    if (status !== "new-item-selected") return;
-    savingAudio({ id: currentAudio.id });
-  }, [status]);
+  console.log(currentAudio);
 
   if (status !== "saved" && status !== "ready" && status !== "new-url")
     return <></>;
 
   return (
-    <>
-      <Audio />
-      <ProgressBar currentAudio={currentAudio} />
-      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-full h-11 bg-black opacity-50  z-30"></div>
-      <div className="absolute bottom-0 left-0 flex gap-6 items-center pl-4 w-44 h-10 z-30">
-        <ControlPlayer
-          togglePlayPause={togglePlayPause}
-          currentAudio={currentAudio}
-          playlist={playlist}
-        />
-      </div>
-      <div className="absolute bottom-0 left-40 h-10 flex items-center gap-1 z-30 sm:left-44">
+    <div className="w-full sticky bottom-0 h-20 sm:h-28 bg-[#181818] flex justify-center items-center">
+      <div className="relative h-full w-11/12 flex flex-col items-center gap-2 p-2 sm:gap-4 sm:p-4">
+        <div className="w-40  flex justify-around">
+          <ControlPlayer
+            togglePlayPause={togglePlayPause}
+            currentAudio={currentAudio}
+            playlist={playlist}
+          />
+        </div>
+
+        <ProgressBar currentAudio={currentAudio} />
         <TimeLinePlayer currentAudio={currentAudio} />
       </div>
-    </>
+    </div>
   );
 };
 

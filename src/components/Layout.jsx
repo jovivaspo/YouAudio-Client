@@ -7,6 +7,8 @@ import Content from "./Content";
 import { useResize } from "../hooks/useResize";
 import Alert from "./Alert";
 import MinPlayer from "./MinPlayer";
+import Audio from "./Audio";
+import Player from "./Player";
 
 const Layout = ({ children }) => {
   const { selected, setSelected } = useContext(Globalcontext);
@@ -33,6 +35,8 @@ const Layout = ({ children }) => {
       </div>
       <MinPlayer />
       <Alert />
+      <Player />
+      <Audio />
     </div>
   );
 };
