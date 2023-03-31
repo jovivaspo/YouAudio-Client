@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { usePlayer } from "../hooks/usePlayer";
 import { onCurrentTime, onDuration, onSeek } from "../store/player/playerSlice";
@@ -6,25 +6,29 @@ import { onCurrentTime, onDuration, onSeek } from "../store/player/playerSlice";
 const Audio = () => {
   const audioPlayer = useRef();
   const dispatch = useDispatch();
-  const { currentAudio, status, loadAudio, savingAudio } = usePlayer();
+  const { currentAudio, status, loadAudio, savingAudio, loadInfo, resetUrl } =
+    usePlayer();
 
+  //Verificando el estado
   useEffect(() => {
-    if (status !== "new-item-selected") return;
-    savingAudio({ id: currentAudio.id });
+    const checkingStatus = {
+      ["starting-audio"]: () => loadInfo({ id: currentAudio.next }),
+      ["info-loaded"]: () => savingAudio({ id: currentAudio.id }),
+      ["audio-saved"]: () => loadAudio({ id: currentAudio.id }),
+      ["reset-url"]: () => loadAudio({ id: currentAudio.id }),
+    };
+    checkingStatus[status] ? checkingStatus[status]() : null;
   }, [status]);
 
+  //Añadir url al reproductor
   useEffect(() => {
-    if (status !== "saved" && status !== "new-url") return;
-    loadAudio({ id: currentAudio.id });
-  }, [status]);
-
-  useEffect(() => {
-    if (status !== "ready" && audioPlayer.current) return;
+    if (status !== "audio-ready" && audioPlayer.current) return;
     audioPlayer.current.src = currentAudio.url;
   }, [currentAudio.url]);
 
+  //Controlar el play/pause
   useEffect(() => {
-    if (!audioPlayer.current && status !== "ready") return;
+    if (!audioPlayer.current && status !== "audio-ready") return;
     currentAudio.isPlaying
       ? audioPlayer.current.play()
       : audioPlayer.current.pause();
@@ -33,6 +37,13 @@ const Audio = () => {
       JSON.stringify({ ...currentAudio, isPlaying: currentAudio.isPlaying })
     );
   }, [currentAudio?.isPlaying, audioPlayer?.current]);
+
+  //Controlar avance de la barra de progreso
+  useEffect(() => {
+    if (currentAudio.seek === 0) return;
+    audioPlayer.current.currentTime = currentAudio.seek;
+    dispatch(onSeek({ seek: 0 }));
+  }, [currentAudio?.seek]);
 
   const setDuration = () => {
     let seconds = audioPlayer.current.duration;
@@ -58,11 +69,10 @@ const Audio = () => {
     //  dispatch(onPlaying({ isPlaying: true }));
   };
 
-  useEffect(() => {
-    if (currentAudio.seek === 0) return;
-    audioPlayer.current.currentTime = currentAudio.seek;
-    dispatch(onSeek({ seek: 0 }));
-  }, [currentAudio?.seek]);
+  const onError = (error) => {
+    console.log("Ocurrió un error", error);
+    resetUrl();
+  };
 
   return (
     <>
@@ -73,12 +83,10 @@ const Audio = () => {
         onLoadedMetadata={setDuration}
         onLoadedData={onLoad}
         onTimeUpdate={onTimeUpdate}
+        onError={onError}
       ></audio>
     </>
   );
 };
 
 export default Audio;
-
-/**  onPlay={() => dispatch(onPlaying({ isPlaying: true }))}
-      onPause={() => dispatch(onPlaying({ isPlaying: false }))} */

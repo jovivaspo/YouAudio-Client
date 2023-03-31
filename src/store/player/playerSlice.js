@@ -31,24 +31,29 @@ export const playerSlice = createSlice({
       : initialStatePlaylist,
   },
   reducers: {
+    onNextAudio: (state, { payload }) => {
+      state.status = "starting-audio";
+      state.currentAudio = { ...initialStateCurrentAudio, next: payload.id };
+    },
+    onLoadInfo: (state, { payload }) => {
+      state.currentAudio = {
+        ...state.currentAudio,
+        next: null,
+        id: payload.id,
+        info: payload.info,
+        videosRelated: payload.videosRelated,
+      };
+      state.status = "info-loaded";
+    },
     onLoadAudio: (state, { payload }) => {
       state.currentAudio = {
         ...state.currentAudio,
         url: payload.url,
       };
-      state.status = "ready";
+      state.status = "audio-ready";
     },
     onLoading: (state) => {
       state.status = "loading-audio";
-    },
-    onLoadInfo: (state, { payload }) => {
-      state.currentAudio = {
-        ...state.currentAudio,
-        id: payload.id,
-        info: payload.info,
-        videosRelated: payload.videosRelated,
-      };
-      state.status = "new-item-selected";
     },
     onPlaylist: (state, { payload }) => {
       state.playlist = {
@@ -58,13 +63,13 @@ export const playerSlice = createSlice({
       };
     },
     onConverter: (state) => {
-      state.status = "converting";
+      state.status = "converting-audio";
     },
     onSaving: (state) => {
-      state.status = "saving";
+      state.status = "saving-audio";
     },
     onSaved: (state) => {
-      state.status = "saved";
+      state.status = "audio-saved";
     },
     onPlaying: (state, { payload }) => {
       state.currentAudio = {
@@ -95,21 +100,18 @@ export const playerSlice = createSlice({
       state.currentAudio = initialStateCurrentAudio;
     },
     onResetUrl: (state) => {
-      state.status = "new-url";
+      state.status = "reset-url";
       state.currentAudio = {
         ...state.currentAudio,
         url: null,
         isPlaying: false,
       };
     },
-    onChangeAudio: (state, { payload }) => {
-      state.status = "change-audio";
-      state.currentAudio = { ...initialStateCurrentAudio, next: payload.id };
-    },
   },
 });
 
 export const {
+  onNextAudio,
   onLoadAudio,
   onLoadInfo,
   onLoading,
@@ -123,5 +125,4 @@ export const {
   onSeek,
   onReset,
   onResetUrl,
-  onChangeAudio,
 } = playerSlice.actions;

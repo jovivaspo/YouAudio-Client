@@ -50,10 +50,10 @@ const Channel = () => {
     }
   }, [selected]);
 
-  if (loading && !channel) return <Loader />;
+  if (loading || !channel) return <Loader />;
 
   return (
-    <>
+    <div className="w-full xl:w-3/4 xl:mx-auto flex flex-col">
       {channel && (
         <ChannelHeader
           selected={selected}
@@ -76,7 +76,7 @@ const Channel = () => {
           })}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

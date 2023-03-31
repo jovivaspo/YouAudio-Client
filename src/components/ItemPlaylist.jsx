@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { onPlaylist } from "../store/player/playerSlice";
 import PlaylistIcon from "./icons/PlaylistIcon";
+import { usePlayer } from "../hooks/usePlayer";
 
 const ItemPlaylist = ({ playlist }) => {
   const refImg = useRef();
@@ -10,6 +11,8 @@ const ItemPlaylist = ({ playlist }) => {
 
   const navigate = useNavigate();
   const distpatch = useDispatch();
+
+  const { startAudio } = usePlayer();
 
   const handlerOver = (e) => {
     if (ref.current.contains(e.target) || refImg.current.contains(e.target)) {
@@ -24,6 +27,7 @@ const ItemPlaylist = ({ playlist }) => {
   };
 
   const handlerClick = () => {
+    console.log(playlist.items);
     distpatch(
       onPlaylist({
         title: playlist.title,
@@ -39,7 +43,7 @@ const ItemPlaylist = ({ playlist }) => {
         id: playlist.id,
       })
     );
-
+    startAudio({ id: playlist.items[0].id });
     navigate(`/playlist/${playlist.id}/${playlist.items[0].id}`);
   };
 

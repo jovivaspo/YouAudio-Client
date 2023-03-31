@@ -1,20 +1,20 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
-import Channel from "../pages/Channel";
-import Playlist from "../pages/Playlist";
-import Search from "../pages/Search";
+import HomePage from "../pages/HomePage";
+import ChannelPage from "../pages/ChannelPage";
+import PlaylistPage from "../pages/PlaylistPage";
+import SearchPage from "../pages/SearchPage";
 import VideoPage from "../pages/VideoPage";
 
 const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/:category" element={<Home />} />
-      <Route path="/search/:q" element={<Search />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/:category" element={<HomePage />} />
+      <Route path="/search/:q" element={<SearchPage />} />
       <Route path="/video/:id" element={<VideoPage />} />
-      <Route path="/channel/:id" element={<Channel />} />
-      <Route path="/playlist/:id/:idVideo" element={<Playlist />} />
+      <Route path="/channel/:id" element={<ChannelPage />} />
+      <Route path="/playlist/:id/:idVideo" element={<PlaylistPage />} />
     </Routes>
   );
 };

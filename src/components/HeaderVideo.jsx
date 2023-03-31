@@ -28,13 +28,9 @@ const HeaderVideo = () => {
   return (
     <div className="w-full sm:h-60 flex flex-col items-center text-white p-8 sm:p-10 gap-4 sm:flex-row sm:gap-8">
       <div className="relative w-72 h-full flex justify-center items-center">
-        {status !== "ready" && imageLaod && (
+        {status !== "audio-ready" && imageLaod && (
           <div className="absolute top-0 left-0 bg-black w-full h-full opacity-60 flex justify-center items-center">
-            <img
-              src={converter}
-              alt="Convirtiendo vídeo"
-              className="w-24 sm:w-32"
-            />
+            <img src={converter} alt="Convirtiendo vídeo" className="w-24" />
           </div>
         )}
         <img

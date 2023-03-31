@@ -10,6 +10,7 @@ import {
   onSaved,
   onLoading,
   onResetUrl,
+  onNextAudio,
 } from "../store/player/playerSlice";
 import { useContext, useEffect } from "react";
 import { Globalcontext } from "../contexts/GlobalContext";
@@ -26,6 +27,27 @@ export const usePlayer = () => {
   );
   const { setAlert, setLoading } = useContext(Globalcontext);
   const dispatch = useDispatch();
+
+  const startAudio = async ({ id }) => {
+    console.log("Nuevo audio");
+    setLoading(true);
+    dispatch(onNextAudio({ id }));
+    localStorage.setItem(
+      "currentAudio",
+      JSON.stringify({
+        url: null,
+        id: null,
+        isPlaying: false,
+        currentTime: 0,
+        duration: 0,
+        seek: 0,
+        info: null,
+        next: id,
+      })
+    );
+    localStorage.setItem("status-audio", "starting-audio");
+    setLoading(false);
+  };
 
   const resetAudio = async ({ id }) => {
     console.log("reset");
@@ -50,11 +72,12 @@ export const usePlayer = () => {
         "currentAudio",
         JSON.stringify({
           ...currentAudio,
+          next: null,
           info: data.videoDetails,
           videosRelated: data.relatedVideos,
         })
       );
-      localStorage.setItem("status-audio", "new-item-selected");
+      localStorage.setItem("status-audio", "info-loaded");
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -70,7 +93,7 @@ export const usePlayer = () => {
       const file = await getFile(id);
       if (file) {
         dispatch(onSaved());
-        localStorage.setItem("status-audio", "saved");
+        localStorage.setItem("status-audio", "audio-saved");
         return false;
       }
       console.log("por aquí está pasando por que el archivo no estaba");
@@ -91,7 +114,7 @@ export const usePlayer = () => {
 
       dispatch(onSaved());
 
-      localStorage.setItem("status-audio", "saved");
+      localStorage.setItem("status-audio", "audio-saved");
 
       //Borramos cualquier archivo que no sea el currentAudio
       const keys = await getAllFiles();
@@ -131,7 +154,7 @@ export const usePlayer = () => {
         })
       );
 
-      localStorage.setItem("status-audio", "ready");
+      localStorage.setItem("status-audio", "audio-ready");
     } catch (error) {
       console.log(error);
       setAlert("Lo sentimos, algo salió mal");
@@ -152,7 +175,7 @@ export const usePlayer = () => {
       })
     );
 
-    localStorage.setItem("status-audio", "new-url");
+    localStorage.setItem("status-audio", "reset-url");
   };
 
   const togglePlayPause = () => {
@@ -165,6 +188,7 @@ export const usePlayer = () => {
     currentAudio,
     playlist,
 
+    startAudio,
     savingAudio,
     loadAudio,
     resetAudio,

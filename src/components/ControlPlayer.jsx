@@ -5,13 +5,13 @@ import NextIcon from "./icons/NextIcon";
 import PrevIcon from "./icons/PrevIcon";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { onChangeAudio, onPlaying, onReset } from "../store/player/playerSlice";
 
 const ControlPlayer = ({ togglePlayPause, currentAudio, playlist }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
 
+  /*
   const handlerNext = async () => {
     if (location.pathname.includes("/video/"))
       return navigate(`/video/${currentAudio.videosRelated[0].id}`);
@@ -74,16 +74,17 @@ const ControlPlayer = ({ togglePlayPause, currentAudio, playlist }) => {
       return dispatch(onChangeAudio({ id: playlist.items[item - 1].id }));
     }
   };
+  */
 
   return (
     <>
-      <button onClick={handlerPrev}>
+      <button>
         <PrevIcon />
       </button>
       <button onClick={togglePlayPause}>
         {currentAudio.isPlaying ? <PauseIcon /> : <PlayIcon />}
       </button>
-      <button onClick={handlerNext}>
+      <button>
         <NextIcon />
       </button>
     </>

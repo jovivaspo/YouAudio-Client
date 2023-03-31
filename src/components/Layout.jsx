@@ -6,7 +6,6 @@ import { categories } from "../helpers/categories";
 import Content from "./Content";
 import { useResize } from "../hooks/useResize";
 import Alert from "./Alert";
-import MinPlayer from "./MinPlayer";
 import Audio from "./Audio";
 import Player from "./Player";
 
@@ -16,27 +15,28 @@ const Layout = ({ children }) => {
   const size = useResize();
 
   return (
-    <div className="relative z-0 bg-dark h-screen w-screen overflow-x-hidden">
-      <Navbar setOpen={setOpen} open={open} size={size} />
-      <div className="flex w-screen">
-        {
-          <Aside
-            categories={categories}
-            selected={selected}
-            setSelected={setSelected}
-            open={open}
-            setOpen={setOpen}
-            size={size}
-          />
-        }
-        <Content open={open} size={size}>
-          {children}
-        </Content>
+    <div className="relative z-0 bg-dark min-h-screen w-screen overflow-x-hidden">
+      <div className="relative h-full w-full">
+        <Audio />
+        <Navbar setOpen={setOpen} open={open} size={size} />
+        <div className="flex w-screen">
+          {
+            <Aside
+              categories={categories}
+              selected={selected}
+              setSelected={setSelected}
+              open={open}
+              setOpen={setOpen}
+              size={size}
+            />
+          }
+          <Content open={open} size={size}>
+            {children}
+          </Content>
+        </div>
+        <Alert />
+        <Player />
       </div>
-      <MinPlayer />
-      <Alert />
-      <Player />
-      <Audio />
     </div>
   );
 };
