@@ -7,7 +7,8 @@ import converter from "../assets/converter.svg";
 const ItemInPlaylist = ({ video }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { playlist, currentAudio, status, startAudio } = usePlayer();
+  const { playlist, currentAudio, status, startAudio, togglePlayPause } =
+    usePlayer();
 
   useEffect(() => {
     if (video.id !== currentAudio.id) return setIsPlaying(false);
@@ -34,7 +35,10 @@ const ItemInPlaylist = ({ video }) => {
       onClick={handlerClick}
     >
       {isPlaying && (
-        <div className="absolute w-full h-full top-0 flex justify-center items-center bg-black opacity-50 md:left-0 md:w-[368px] md:m-0">
+        <div
+          className="absolute w-full h-full top-0 flex justify-center items-center bg-black opacity-50 md:left-0 md:w-[368px] md:m-0"
+          onClick={togglePlayPause}
+        >
           {currentAudio.isPlaying ? (
             <PauseIcon width={50} height={50} className="mb-10 md:m-0" />
           ) : (

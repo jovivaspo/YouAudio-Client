@@ -49,9 +49,10 @@ export const usePlayer = () => {
     setLoading(false);
   };
 
-  const resetAudio = async ({ id }) => {
+  const resetAudio = async () => {
     console.log("reset");
     dispatch(onReset());
+    localStorage.removeItem("playlist");
     localStorage.removeItem("currentAudio");
     localStorage.removeItem("status-audio");
   };

@@ -2,15 +2,20 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { usePlayer } from "../hooks/usePlayer";
+import { current } from "@reduxjs/toolkit";
 
 const VideoItem = ({ video }) => {
-  const { startAudio } = usePlayer();
+  const { playlist, startAudio, resetAudio } = usePlayer();
 
   const id = video.id.videoId || video.id;
 
   const navigate = useNavigate();
 
   const handlerClick = () => {
+    if (playlist.id) {
+      resetAudio();
+    }
+
     startAudio({ id });
     navigate(`/video/${id}`);
   };

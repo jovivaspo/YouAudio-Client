@@ -4,7 +4,8 @@ import ProgressBar from "./ProgressBar";
 import TimeLinePlayer from "./TimeLinePlayer";
 
 const Player = () => {
-  const { currentAudio, status, playlist, togglePlayPause } = usePlayer();
+  const { currentAudio, status, playlist, togglePlayPause, startAudio } =
+    usePlayer();
 
   return (
     <div
@@ -22,6 +23,7 @@ const Player = () => {
         <div className="w-40  flex justify-around">
           <ControlPlayer
             togglePlayPause={togglePlayPause}
+            startAudio={startAudio}
             currentAudio={currentAudio}
             playlist={playlist}
           />

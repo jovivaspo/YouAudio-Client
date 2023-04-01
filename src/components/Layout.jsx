@@ -15,8 +15,8 @@ const Layout = ({ children }) => {
   const size = useResize();
 
   return (
-    <div className="relative z-0 bg-dark min-h-screen w-screen overflow-x-hidden">
-      <div className="relative h-full w-full">
+    <div className="relative z-0 bg-dark min-h-screen w-screen overflow-x-hidden ">
+      <div className="relative h-full w-full mb-20 sm:mb-28">
         <Audio />
         <Navbar setOpen={setOpen} open={open} size={size} />
         <div className="flex w-screen">

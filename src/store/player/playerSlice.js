@@ -98,6 +98,7 @@ export const playerSlice = createSlice({
     onReset: (state) => {
       state.status = null;
       state.currentAudio = initialStateCurrentAudio;
+      state.playlist = initialStatePlaylist;
     },
     onResetUrl: (state) => {
       state.status = "reset-url";

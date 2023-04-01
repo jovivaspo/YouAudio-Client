@@ -3,89 +3,76 @@ import PauseIcon from "./icons/PauseIcon";
 import PlayIcon from "./icons/PlayIcon";
 import NextIcon from "./icons/NextIcon";
 import PrevIcon from "./icons/PrevIcon";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const ControlPlayer = ({ togglePlayPause, currentAudio, playlist }) => {
+const ControlPlayer = ({
+  togglePlayPause,
+  startAudio,
+  currentAudio,
+  playlist,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
 
-  /*
-  const handlerNext = async () => {
-    if (location.pathname.includes("/video/"))
-      return navigate(`/video/${currentAudio.videosRelated[0].id}`);
-    const item = playlist?.items?.findIndex((el) => currentAudio.id === el.id);
-    if (
-      location.pathname.includes("/playlist/") &&
-      playlist?.items?.length > 0
-    ) {
-      if (item === item.length - 1)
-        return dispatch(onPlaying({ isPlaying: false }));
-      else {
-        navigate(`/playlist/${playlist.id}/${playlist.items[item + 1].id}`);
+  const handlerNext = () => {
+    let next = "";
+    if (playlist.id) {
+      const indexInPlay = playlist.items.findIndex(
+        (el) => currentAudio.id === el.id
+      );
+      if (indexInPlay === playlist.items.length - 1) {
+        next = playlist.items[0].id;
+        startAudio({ id: next });
+      } else {
+        next = playlist.items[indexInPlay + 1].id;
+        startAudio({ id: next });
       }
+    } else {
+      next = currentAudio.videosRelated[0].id;
+      startAudio({ id: next });
     }
 
-    if (item === -1 || !playlist.id)
-      return dispatch(onChangeAudio({ id: currentAudio.videosRelated[0].id }));
-    if (item === item.length - 1)
-      return dispatch(onPlaying({ isPlaying: false }));
-    else {
-      return dispatch(onChangeAudio({ id: playlist.items[item + 1].id }));
+    if (location.pathname.includes("/video/")) {
+      navigate(`/video/${next}`);
     }
   };
 
   const handlerPrev = () => {
-    if (location.pathname.includes("/video/"))
-      return navigate(
-        `/video/${
-          currentAudio.videosRelated[currentAudio.videosRelated.length - 1].id
-        }`
+    let next = "";
+    if (playlist.id) {
+      const indexInPlay = playlist.items.findIndex(
+        (el) => currentAudio.id === el.id
       );
-    const item = playlist?.items?.findIndex((el) => currentAudio.id === el.id);
-    if (
-      location.pathname.includes("/playlist/") &&
-      playlist?.items?.length > 0
-    ) {
-      if (item === 0)
-        navigate(
-          `/playlist/${playlist.id}/${
-            playlist.items[playlist.items.length - 1].id
-          }`
-        );
-      else {
-        navigate(`/playlist/${playlist.id}/${playlist.items[item - 1].id}`);
+      if (indexInPlay === 0) {
+        next = playlist.items[playlist.items.length - 1].id;
+        startAudio({ id: next });
+      } else {
+        next = playlist.items[indexInPlay - 1].id;
+        startAudio({ id: next });
       }
+    } else {
+      next =
+        currentAudio.videosRelated[currentAudio.videosRelated.length - 1].id;
+      startAudio({
+        id: next,
+      });
     }
 
-    if (item === -1 || !playlist.id)
-      return dispatch(
-        onChangeAudio({
-          id: currentAudio.videosRelated[currentAudio.videosRelated.length - 1]
-            .id,
-        })
-      );
-    if (item === 0)
-      returndispatch(
-        onChangeAudio({ id: playlist.items[playlist.items.length - 1].id })
-      );
-    else {
-      return dispatch(onChangeAudio({ id: playlist.items[item - 1].id }));
+    if (location.pathname.includes("/video/")) {
+      navigate(`/video/${next}`);
     }
   };
-  */
 
   return (
     <>
       <button>
-        <PrevIcon />
+        <PrevIcon onClick={handlerPrev} />
       </button>
       <button onClick={togglePlayPause}>
         {currentAudio.isPlaying ? <PauseIcon /> : <PlayIcon />}
       </button>
       <button>
-        <NextIcon />
+        <NextIcon onClick={handlerNext} />
       </button>
     </>
   );
