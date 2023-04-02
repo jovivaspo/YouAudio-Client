@@ -30,9 +30,11 @@ const Layout = ({ children }) => {
               size={size}
             />
           }
-          <Content open={open} size={size}>
-            {children}
-          </Content>
+          <div className="mt-24">
+            <Content open={open} size={size}>
+              {children}
+            </Content>
+          </div>
         </div>
         <Alert />
         <Player />

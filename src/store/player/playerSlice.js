@@ -15,6 +15,7 @@ const initialStatePlaylist = {
   id: null,
   title: "",
   items: [],
+  channel: null,
 };
 
 export const playerSlice = createSlice({
@@ -60,6 +61,7 @@ export const playerSlice = createSlice({
         id: payload.id,
         title: payload.title,
         items: payload.items,
+        channel: payload.channel,
       };
     },
     onConverter: (state) => {

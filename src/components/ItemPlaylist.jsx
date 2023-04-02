@@ -11,6 +11,8 @@ const ItemPlaylist = ({ playlist }) => {
 
   const { startAudio } = usePlayer();
 
+  console.log(playlist);
+
   const handlerClick = () => {
     console.log(playlist.items);
     distpatch(
@@ -18,6 +20,10 @@ const ItemPlaylist = ({ playlist }) => {
         title: playlist.title,
         items: playlist.items,
         id: playlist.id,
+        channel: {
+          title: playlist.author.name,
+          img: playlist.author.bestAvatar.url,
+        },
       })
     );
     localStorage.setItem(
@@ -26,6 +32,10 @@ const ItemPlaylist = ({ playlist }) => {
         title: playlist.title,
         items: playlist.items,
         id: playlist.id,
+        channel: {
+          title: playlist.author.name,
+          img: playlist.author.bestAvatar.url,
+        },
       })
     );
     startAudio({ id: playlist.items[0].id });

@@ -4,7 +4,9 @@ import ItemListVideo from "./ItemListVideo";
 
 const ListVideo = () => {
   const { currentAudio } = usePlayer();
+
   if (!currentAudio.videosRelated) return <></>;
+
   return (
     <div className="w-full flex flex-col gap-8 p-8 pt-4 sm:p-10 text-white">
       <h3 className=" text-2xl">Videos Relacionados</h3>

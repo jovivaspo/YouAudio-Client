@@ -37,7 +37,7 @@ const Aside = ({ categories, selected, setSelected, open, setOpen, size }) => {
   return (
     <aside
       ref={ref}
-      className="fixed top-0 left-0 z-10 bg-black opacity-90 lg:bg-transparent text-white w-80 my-14 p-10  border-r-2 border-gray-500 ease-linear duration-100 -translate-x-full"
+      className="fixed top-0 left-0 z-50 bg-black opacity-90   text-white w-80 my-14 p-10  border-r-2 border-gray-500 ease-linear duration-100 -translate-x-full"
     >
       <ul className="h-full flex flex-col justify-around ">
         {selected &&

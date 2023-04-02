@@ -11,7 +11,7 @@ const Navbar = ({ setOpen, open, size }) => {
     useSearch(size);
 
   return (
-    <nav className="sticky top-0 w-full z-50 border-b-2 border-gray-600 bg-dark sm:h-16">
+    <nav className="fixed top-0 w-full z-50 border-b-2 border-gray-600 bg-dark sm:h-16">
       <div className="relative h-14 sm:h-16 px-4 flex items-center justify-between gap-1">
         <div className="flex gap-4">
           <MenuButton setOpen={setOpen} open={open} />

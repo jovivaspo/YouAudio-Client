@@ -3,11 +3,15 @@ import { usePlayer } from "../hooks/usePlayer";
 import converter from "../assets/converter.svg";
 import { Link } from "react-router-dom";
 import { getDate } from "../helpers/getDate";
+import ControlPlayer from "./ControlPlayer";
+import ProgressBar from "./ProgressBar";
+import TimeLinePlayer from "./TimeLinePlayer";
 
 const HeaderVideo = () => {
   const [imageLaod, setImageLoad] = useState(false);
 
-  const { currentAudio, status, togglePlayPause } = usePlayer();
+  const { currentAudio, status, togglePlayPause, startAudio, playlist } =
+    usePlayer();
 
   const handlerClick = () => {
     togglePlayPause();
@@ -30,7 +34,7 @@ const HeaderVideo = () => {
       <div className="relative w-72 h-full flex justify-center items-center">
         {status !== "audio-ready" && imageLaod && (
           <div className="absolute top-0 left-0 bg-black w-full h-full opacity-60 flex justify-center items-center">
-            <img src={converter} alt="Convirtiendo vídeo" className="w-24" />
+            <img src={converter} alt="Convirtiendo vídeo" className="w-24 " />
           </div>
         )}
         <img
@@ -44,6 +48,25 @@ const HeaderVideo = () => {
           loading="lazy"
           onLoad={handlerLoadImage}
         />
+        {status === "audio-ready" && imageLaod && (
+          <>
+            <div className="absolute bottom-0 left-0 bg-black opacity-40 w-full z-10 h-8"></div>
+            <div className="absolute bottom-8 left-0 flex justify-around w-full z-20 ">
+              <ProgressBar currentAudio={currentAudio} />
+            </div>
+            <div className="sm:hidden absolute bottom-0 right-1 flex  justify-around z-20">
+              <TimeLinePlayer currentAudio={currentAudio} />
+            </div>
+            <div className="absolute bottom-0 left-0 flex justify-around w-40  z-20">
+              <ControlPlayer
+                togglePlayPause={togglePlayPause}
+                startAudio={startAudio}
+                currentAudio={currentAudio}
+                playlist={playlist}
+              />
+            </div>
+          </>
+        )}
       </div>
       {currentAudio.info && (
         <div className="flex flex-col gap-2 sm:gap-4">

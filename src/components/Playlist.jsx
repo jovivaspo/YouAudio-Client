@@ -12,15 +12,14 @@ const Playlist = () => {
       <div>
         <div className="text-white flex justify-start gap-8 w-full p-4">
           <img
-            src={currentAudio.info?.channelImg?.url}
+            src={playlist?.channel?.img}
             alt="Avatar"
             className="w-20 h-20 rounded-full"
           />
           <div className="flex flex-col gap-4">
-            <h3 className="text-xl">{currentAudio?.info?.user}</h3>
             <h3 className="text-xl">
               <Link to={`/channel/${currentAudio?.info?.channelId}`}>
-                {currentAudio?.info?.channel}
+                {playlist?.channel?.title}
               </Link>
             </h3>
           </div>

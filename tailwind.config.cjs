@@ -6,6 +6,15 @@ module.exports = {
       sans: "Roboto",
     },
     extend: {
+      keyframes: {
+        move: {
+          "0%": { transform: "translateX(0)" },
+          "25%": { transform: "translateX(-50%)" },
+          "50%": { transform: "translateX(-100%)" },
+          "75%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+      },
       colors: {
         dark: "#0f0f0f",
       },

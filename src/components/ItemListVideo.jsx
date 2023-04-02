@@ -1,13 +1,26 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { calculateTime } from "../helpers/calculateTime";
+import { usePlayer } from "../hooks/usePlayer";
 
 const ItemListVideo = ({ video, index }) => {
   const id = video.id.videoId || video.id;
+  const { playlist, startAudio, resetAudio } = usePlayer();
+
+  const navigate = useNavigate();
+
+  const handlerClick = () => {
+    if (playlist.id) {
+      resetAudio();
+    }
+
+    startAudio({ id });
+    navigate(`/video/${id}`);
+  };
 
   return (
     <div className="grid grid-cols-xs md:grid-cols-md">
       <span className="flex items-center">{index + 1}</span>
-      <div className="flex items-center gap-2 ml-8">
+      <div className="flex items-center gap-2 ml-8" onClick={handlerClick}>
         <Link to={`/video/${id}`}>
           <img
             src={
@@ -43,8 +56,10 @@ const ItemListVideo = ({ video, index }) => {
             video.channel.name}
         </span>
       </Link>
-      <span className="hidden md:block mx-auto">{video.published}</span>
-      <span className="hidden md:block mx-auto">
+      <span className="hidden md:block mx-auto text-gray-500">
+        {video.published}
+      </span>
+      <span className="hidden md:block mx-auto text-gray-500">
         {calculateTime(video.length_seconds)}
       </span>
     </div>
