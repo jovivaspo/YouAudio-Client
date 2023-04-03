@@ -21,7 +21,7 @@ const Alert = () => {
   return (
     <div
       ref={ref}
-      className="absolute top-20 right-0 bg-blue-600  p-4 rounded-l-xl translate-x-full ease-in duration-100"
+      className="absolute top-20 right-0 bg-blue-600  p-4 rounded-l-xl translate-x-full ease-in duration-100 pr-6"
     >
       <p className="text-white">
         <strong>{alert}</strong>

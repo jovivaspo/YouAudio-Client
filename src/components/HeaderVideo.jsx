@@ -6,6 +6,7 @@ import { getDate } from "../helpers/getDate";
 import ControlPlayer from "./ControlPlayer";
 import ProgressBar from "./ProgressBar";
 import TimeLinePlayer from "./TimeLinePlayer";
+import DownloadButton from "./DownloadButton";
 
 const HeaderVideo = () => {
   const [imageLaod, setImageLoad] = useState(false);
@@ -63,11 +64,12 @@ const HeaderVideo = () => {
           <h3 className="text-lg sm:text-2xl lg:text-4xl">
             {currentAudio.info?.title}
           </h3>
-          <p className="flex gap-2 text-gray-400">
+          <p className="flex gap-2 text-gray-400 items-center">
             <span>
               {parseInt(currentAudio.info?.views).toLocaleString("es-ES")} views
             </span>
             <span>hace {getDate(currentAudio.info?.date)}</span>
+            <DownloadButton/>
           </p>
           <div className="flex gap-2 items-center">
             <img
@@ -81,9 +83,11 @@ const HeaderVideo = () => {
             >
               {currentAudio.info?.channel}
             </Link>
+           
           </div>
         </div>
       )}
+     
     </div>
   );
 };
