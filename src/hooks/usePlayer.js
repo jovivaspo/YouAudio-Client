@@ -32,7 +32,7 @@ export const usePlayer = () => {
   const navigate = useNavigate()
 
   const startAudio = async ({ id }) => {
-    console.log("Nuevo audio");
+
     setLoading(true);
     dispatch(onNextAudio({ id }));
     localStorage.setItem(
@@ -53,7 +53,7 @@ export const usePlayer = () => {
   };
 
   const resetAudio = async () => {
-    console.log("reset");
+  
     dispatch(onReset());
     localStorage.removeItem("playlist");
     localStorage.removeItem("currentAudio");
@@ -62,7 +62,7 @@ export const usePlayer = () => {
 
   const loadInfo = async ({ id }) => {
     try {
-      console.log("Se carga la información");
+    
       setLoading(true);
       const { data } = await api.get(`/video/info/${id}`);
       dispatch(
@@ -84,7 +84,7 @@ export const usePlayer = () => {
       localStorage.setItem("status-audio", "info-loaded");
       setLoading(false);
     } catch (error) {
-      console.log(error);
+
       setLoading(false);
       setAlert(error.response.data.error || "Lo sentimos, algo salió mal");
     }
@@ -93,14 +93,14 @@ export const usePlayer = () => {
   const savingAudio = async ({ id }) => {
     try {
       //Vemos si elemento ya existe en la base de datos
-      console.log("¿Guardando?");
+     
       const file = await getFile(id);
       if (file) {
         dispatch(onSaved());
         localStorage.setItem("status-audio", "audio-saved");
         return false;
       }
-      console.log("por aquí está pasando por que el archivo no estaba");
+  
       dispatch(onConverter());
       localStorage.setItem("status-audio", "converting");
 
@@ -131,14 +131,14 @@ export const usePlayer = () => {
         );
       }
     } catch (error) {
-      console.log(error);
+     
       setAlert("Lo sentimos, algo salió mal...");
     }
   };
 
   const loadAudio = async ({ id }) => {
     try {
-      console.log("Cargando audio");
+     
 
       dispatch(onLoading());
 
@@ -161,13 +161,13 @@ export const usePlayer = () => {
 
       localStorage.setItem("status-audio", "audio-ready");
     } catch (error) {
-      console.log(error);
+     
       setAlert("Lo sentimos, algo salió mal");
     }
   };
 
   const resetUrl = async () => {
-    console.log("reset url");
+ 
 
     dispatch(onResetUrl());
 

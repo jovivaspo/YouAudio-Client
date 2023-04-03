@@ -22,6 +22,7 @@ const VideoItem = ({ video }) => {
 
   return (
     <div className="flex flex-col justify-center items-center max-w-xs min-w-min">
+      <div className="w-full bg-slate-800 min-h-[100px]">
       <img
         src={
           video.snippet?.thumbnails.medium.url ||
@@ -30,10 +31,12 @@ const VideoItem = ({ video }) => {
           ""
         }
         alt=""
-        className="rounded-xl cursor-pointer"
+        className="rounded-xl cursor-pointer w-full h-full object-contain"
         loading="lazy"
         onClick={handlerClick}
       />
+      </div>
+    
 
       <div className="flex flex-col justify-start w-full my-2">
         <p className="text-white cursor-pointer" onClick={handlerClick}>

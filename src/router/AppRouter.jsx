@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import ChannelPage from "../pages/ChannelPage";
 import PlaylistPage from "../pages/PlaylistPage";
@@ -15,6 +15,7 @@ const AppRouter = () => {
       <Route path="/video/:id" element={<VideoPage />} />
       <Route path="/channel/:id" element={<ChannelPage />} />
       <Route path="/playlist/:id/:idVideo" element={<PlaylistPage />} />
+      <Route path="/*" element={<Navigate to="/" />} />
     </Routes>
   );
 };

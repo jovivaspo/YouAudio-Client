@@ -11,10 +11,9 @@ const ItemPlaylist = ({ playlist }) => {
 
   const { startAudio } = usePlayer();
 
-  console.log(playlist);
 
   const handlerClick = () => {
-    console.log(playlist.items);
+   
     distpatch(
       onPlaylist({
         title: playlist.title,

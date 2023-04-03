@@ -14,7 +14,6 @@ const Audio = () => {
     if(!currentAudio.url) return 
     fetch(currentAudio.url)
     .catch(err=>{
-      console.log(err)
       resetUrl();
     })
   },[])
