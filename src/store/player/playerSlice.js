@@ -50,6 +50,7 @@ export const playerSlice = createSlice({
       state.currentAudio = {
         ...state.currentAudio,
         url: payload.url,
+        isPlaying:true,
       };
       state.status = "audio-ready";
     },

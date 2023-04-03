@@ -12,7 +12,7 @@ import {
   onResetUrl,
   onNextAudio,
 } from "../store/player/playerSlice";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Globalcontext } from "../contexts/GlobalContext";
 import {
   deleteFile,
@@ -20,6 +20,7 @@ import {
   getFile,
   updateDataBase,
 } from "../helpers/indexDB";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const usePlayer = () => {
   const { status, currentAudio, playlist } = useSelector(
@@ -27,6 +28,8 @@ export const usePlayer = () => {
   );
   const { setAlert, setLoading } = useContext(Globalcontext);
   const dispatch = useDispatch();
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const startAudio = async ({ id }) => {
     console.log("Nuevo audio");
@@ -151,6 +154,7 @@ export const usePlayer = () => {
         "currentAudio",
         JSON.stringify({
           ...currentAudio,
+          isPlaying:true,
           url: audioUrl,
         })
       );
@@ -184,6 +188,56 @@ export const usePlayer = () => {
     dispatch(onPlaying({ isPlaying: !prevValue }));
   };
 
+  const handlerNext = () => {
+    let next = "";
+    if (playlist.id) {
+      const indexInPlay = playlist.items.findIndex(
+        (el) => currentAudio.id === el.id
+      );
+      if (indexInPlay === playlist.items.length - 1) {
+        next = playlist.items[0].id;
+        startAudio({ id: next });
+      } else {
+        next = playlist.items[indexInPlay + 1].id;
+        startAudio({ id: next });
+      }
+    } else {
+      next = currentAudio.videosRelated[0].id;
+      startAudio({ id: next });
+    }
+
+    if (location.pathname.includes("/video/")) {
+      navigate(`/video/${next}`);
+    }
+  };
+
+  const handlerPrev = () => {
+    let next = "";
+    if (playlist.id) {
+      const indexInPlay = playlist.items.findIndex(
+        (el) => currentAudio.id === el.id
+      );
+      if (indexInPlay === 0) {
+        next = playlist.items[playlist.items.length - 1].id;
+        startAudio({ id: next });
+      } else {
+        next = playlist.items[indexInPlay - 1].id;
+        startAudio({ id: next });
+      }
+    } else {
+      next =
+        currentAudio.videosRelated[currentAudio.videosRelated.length - 1].id;
+      startAudio({
+        id: next,
+      });
+    }
+
+    if (location.pathname.includes("/video/")) {
+      navigate(`/video/${next}`);
+    }
+  };
+
+
   return {
     status,
     currentAudio,
@@ -197,5 +251,7 @@ export const usePlayer = () => {
     resetUrl,
 
     togglePlayPause,
+    handlerNext,
+    handlerPrev
   };
 };

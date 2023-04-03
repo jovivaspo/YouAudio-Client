@@ -10,20 +10,8 @@ import TimeLinePlayer from "./TimeLinePlayer";
 const HeaderVideo = () => {
   const [imageLaod, setImageLoad] = useState(false);
 
-  const { currentAudio, status, togglePlayPause, startAudio, playlist } =
+  const { currentAudio, status, togglePlayPause, handlerNext, handlerPrev } =
     usePlayer();
-
-  const handlerClick = () => {
-    togglePlayPause();
-
-    if (ref.current) {
-      ref.current.style.opacity = "30%";
-      const timeVisibility = setTimeout(() => {
-        ref.current.style.opacity = "0";
-      }, [500]);
-      return () => clearTimeout(timeVisibility);
-    }
-  };
 
   const handlerLoadImage = () => {
     setImageLoad(true);
@@ -44,7 +32,7 @@ const HeaderVideo = () => {
             ].url
           }
           alt={currentAudio.info?.title}
-          className="w-full"
+          className="w-full h-full object-contain "
           loading="lazy"
           onLoad={handlerLoadImage}
         />
@@ -60,9 +48,11 @@ const HeaderVideo = () => {
             <div className="absolute bottom-0 left-0 flex justify-around w-40  z-20">
               <ControlPlayer
                 togglePlayPause={togglePlayPause}
-                startAudio={startAudio}
+                handlerNext={handlerNext}
+                handlerPrev={handlerPrev}
+
                 currentAudio={currentAudio}
-                playlist={playlist}
+               
               />
             </div>
           </>

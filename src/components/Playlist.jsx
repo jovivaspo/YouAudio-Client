@@ -18,7 +18,7 @@ const Playlist = () => {
           />
           <div className="flex flex-col gap-4">
             <h3 className="text-xl">
-              <Link to={`/channel/${currentAudio?.info?.channelId}`}>
+              <Link to={`/channel/${currentAudio?.info?.channelId}`} className="hover:text-blue-600" >
                 {playlist?.channel?.title}
               </Link>
             </h3>

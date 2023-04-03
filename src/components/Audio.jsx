@@ -1,13 +1,23 @@
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { usePlayer } from "../hooks/usePlayer";
-import { onCurrentTime, onDuration, onSeek } from "../store/player/playerSlice";
+import { onCurrentTime, onDuration, onPlaying, onSeek } from "../store/player/playerSlice";
 
 const Audio = () => {
   const audioPlayer = useRef();
   const dispatch = useDispatch();
-  const { currentAudio, status, loadAudio, savingAudio, loadInfo, resetUrl } =
+  const { currentAudio, status, loadAudio, savingAudio, loadInfo, resetUrl, handlerNext } =
     usePlayer();
+
+  //Verificamos que existe la url existente
+  useEffect(()=>{
+    if(!currentAudio.url) return 
+    fetch(currentAudio.url)
+    .catch(err=>{
+      console.log(err)
+      resetUrl();
+    })
+  },[])
 
   //Verificando el estado
   useEffect(() => {
@@ -29,9 +39,15 @@ const Audio = () => {
   //Controlar el play/pause
   useEffect(() => {
     if (!audioPlayer.current && status !== "audio-ready") return;
-    currentAudio.isPlaying
-      ? audioPlayer.current.play()
-      : audioPlayer.current.pause();
+    if(currentAudio.isPlaying){
+      const startPlay = audioPlayer.current.play().catch((error)=>{
+        dispatch(onPlaying({isPlaying:false}))
+      })
+      
+    }else{
+      audioPlayer.current.pause();
+    }
+      
     localStorage.setItem(
       "currentAudio",
       JSON.stringify({ ...currentAudio, isPlaying: currentAudio.isPlaying })
@@ -66,13 +82,19 @@ const Audio = () => {
 
   const onLoad = () => {
     audioPlayer.current.currentTime = currentAudio.currentTime;
-    //  dispatch(onPlaying({ isPlaying: true }));
   };
 
   const onError = (error) => {
     console.log("Ocurrió un error", error);
+    dispatch(onPlaying({isPlaying:false}))
     resetUrl();
   };
+
+  const onEnded = () => {
+    dispatch(onPlaying({isPlaying:false}))
+    handlerNext()
+  } 
+
 
   return (
     <>
@@ -83,6 +105,7 @@ const Audio = () => {
         onLoadedMetadata={setDuration}
         onLoadedData={onLoad}
         onTimeUpdate={onTimeUpdate}
+        onEnded={onEnded}
         onError={onError}
       ></audio>
     </>
