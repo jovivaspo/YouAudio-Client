@@ -40,7 +40,7 @@ const Player = () => {
             className="w-20 sm:w-24 rounded-lg "
           >
             {status !== "audio-ready" && imageLaod && (
-          <div className="absolute bottom-0 left-0 bg-black w-full h-full opacity-30 flex justify-center items-center">
+          <div className="absolute bottom-0 left-0 bg-black w-full h-full opacity-50 flex justify-center items-center">
             <img src={converter} alt="Convirtiendo vídeo" className="w-6" />
           </div>
         )}
@@ -51,7 +51,7 @@ const Player = () => {
         
           <div className=" overflow-hidden flex items-center w-[280px]">
           {currentAudio.info && ( 
-            <h3 className="text-white whitespace-pre animate-[move_linear_30s_infinite]">
+            <h3 className="text-white whitespace-pre animate-[move_linear_30s_infinite] h-full text-center">
               {title}
             </h3>
           )}

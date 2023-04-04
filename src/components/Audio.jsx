@@ -84,7 +84,6 @@ const Audio = () => {
   };
 
   const onError = (error) => {
-    console.log("Ocurrió un error", error);
     dispatch(onPlaying({isPlaying:false}))
     resetUrl();
   };

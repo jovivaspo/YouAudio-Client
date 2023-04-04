@@ -42,12 +42,13 @@ const ItemPlaylist = ({ playlist }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center max-w-xs min-w-min">
+    <div className="flex flex-col justify-center items-center w-[340px] h-[280px] sm:w-[320px] sm:h-[270px] lg:w-[280px] lg:h-[260px]">
       <div onClick={handlerClick} className="relative cursor-pointer">
         <div className="absolute z-10 top-0 right-0 w-1/3 h-full bg-black opacity-60 rounded-r-xl flex flex-col justify-center items-center">
           <p className="text-white text-lg">{playlist.estimatedItemCount}</p>
           <PlaylistIcon />
         </div>
+        <div className="position relative bg-slate-800 min-h-[160px] w-[320px] sm:w-[300px] lg:w-[280px]  rounded-xl">
         <img
           src={
             playlist.snippet?.thumbnails.medium.url ||
@@ -55,8 +56,10 @@ const ItemPlaylist = ({ playlist }) => {
             ""
           }
           alt=""
-          className="rounded-xl"
+          className=" position absolute top-0 right-0 rounded-xl cursor-pointer w-full h-full object-cover"
+          loading="lazy"
         />
+         </div>
       </div>
       <div className="flex flex-col justify-start w-full my-2">
         <p className="text-white">
