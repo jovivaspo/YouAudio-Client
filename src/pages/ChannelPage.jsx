@@ -53,7 +53,7 @@ const Channel = () => {
   if (loading || !channel) return <Loader />;
 
   return (
-    <div className="w-full xl:w-3/4 xl:mx-auto flex flex-col">
+    <div className="w-full xl:w-[98%] xl:mx-auto flex flex-col">
       {channel && (
         <ChannelHeader
           selected={selected}
@@ -62,7 +62,7 @@ const Channel = () => {
         />
       )}
       {channel && selected === "videos" && (
-        <div className="grid grid-cols-1 grid-rows-1 gap-6 m-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center justify-items-center h-full">
+        <div className="grid grid-cols-1 grid-rows-1 gap-6 m-10 sm:grid-cols-2 lg:grid-cols-3 justify-center justify-items-center h-full">
           {channel.items.map((el, index) => {
             return <VideoItem video={el} key={index} />;
           })}
@@ -70,7 +70,7 @@ const Channel = () => {
       )}
       {selected === "playlists" && loading && !playlists && <Loader />}
       {selected === "playlists" && playlists && (
-        <div className="grid grid-cols-1 grid-rows-1 gap-6 m-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center justify-items-center h-full">
+        <div className="grid grid-cols-1 grid-rows-1 gap-6 m-10 sm:grid-cols-2 lg:grid-cols-3  justify-center justify-items-center h-full">
           {playlists.map((el, index) => {
             return <ItemPlaylist playlist={el} key={index} />;
           })}

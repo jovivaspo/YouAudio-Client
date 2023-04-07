@@ -21,8 +21,8 @@ const VideoItem = ({ video }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center max-w-xs min-w-min">
-      <div className="w-full bg-slate-800 min-h-[100px]">
+    <div className="flex flex-col justify-start items-center w-[340px] h-[280px] sm:w-[320px] sm:h-[270px] lg:w-[280px] lg:h-[260px]">
+      <div className="position relative bg-slate-800 min-h-[160px] w-[320px] sm:w-[300px] lg:w-[280px]  rounded-lg">
       <img
         src={
           video.snippet?.thumbnails.medium.url ||
@@ -31,7 +31,7 @@ const VideoItem = ({ video }) => {
           ""
         }
         alt=""
-        className="rounded-xl cursor-pointer w-full h-full object-contain"
+        className=" position absolute top-0 right-0 rounded-xl cursor-pointer w-full h-full object-cover"
         loading="lazy"
         onClick={handlerClick}
       />
@@ -39,11 +39,11 @@ const VideoItem = ({ video }) => {
     
 
       <div className="flex flex-col justify-start w-full my-2">
-        <p className="text-white cursor-pointer" onClick={handlerClick}>
+        <p className="text-white cursor-pointer text-md" onClick={handlerClick}>
           <strong>{video.snippet?.title || video.title}</strong>
         </p>
 
-        <span className="text-gray-500 hover:text-blue-600">
+        <span className="text-gray-500 hover:text-blue-600 text-sm">
           <Link
             to={`/channel/${
               video.snippet?.channelId ||

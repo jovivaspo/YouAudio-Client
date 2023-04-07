@@ -10,7 +10,7 @@ const VideoPage = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="w-full xl:w-3/4 xl:mx-auto flex flex-col">
+    <div className="w-full xl:w-[90%] xl:mx-auto flex flex-col">
       <HeaderVideo />
       <ListVideo />
     </div>
