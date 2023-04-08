@@ -29,7 +29,7 @@ const Home = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="w-full  xl:w-[90%] xl:mx-auto grid grid-cols-1 grid-rows-1 gap-6 xl:m-10 sm:grid-cols-2 lg:grid-cols-3 justify-center justify-items-center h-full">
+    <div className="w-full  xl:w-[90%] xl:mx-auto grid grid-cols-1 grid-rows-1 gap-6 xl:m-10 sm:grid-cols-2 lg:grid-cols-3 justify-center justify-items-center">
       {videos.length > 0 &&
         videos.map((video, index) => {
           return <VideoItem video={video} key={index} />;
