@@ -5,7 +5,7 @@ const Globalcontext = createContext();
 
 const GlobalProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState("Esto es un mensaje de prueba");
+  const [alert, setAlert] = useState("");
   const [videos, setVideos] = useState([]);
   const [selected, setSelected] = useState(Object.keys(categories)[0]);
 
